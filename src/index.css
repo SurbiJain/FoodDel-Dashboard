@@ -1,10 +1,16 @@
-html, body, #root, .app, .content {
+html, body, #root, .app {
   height: 100%;
   width: 100%;
+}
+
+.content {
+  width: 100%;
+  /* height: fit-content; */
 }
 .app{
   display: flex;
   position: relative;
+  height: fit-content;
 }
 ::-webkit-scrollbar{
   width: 10px;

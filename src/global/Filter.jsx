@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, createContext, useState } from "react";
+import React, { useContext,  useState } from "react";
 import { Box, Typography } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,18 +11,14 @@ import Button from "@mui/material/Button";
 import axios from "./../hooks/axios";
 import useAxios from "./../hooks/useAxios";
 import { useFormik } from "formik";
-import { setFilterContext } from "../scenes/orders";
 import DateSelector from "./DatePicker";
-
-
-export const startDateContext = createContext();
-export const endDateContext = createContext();
+import { FilterContext, startDateContext, endDateContext } from "./../App";
 
 const Filter = () => {
-  const setFilterData = useContext(setFilterContext);
+  const {filterData, setFilterData} = useContext(FilterContext);
+  const {startDate, setStartDate} = useContext(startDateContext);
+  const {endDate, setEndData} = useContext(endDateContext);
   const [selectedStatus, setSelectedStatus] = useState([]);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
   
   let [store] = useAxios({
     axiosInstance: axios,
@@ -131,7 +127,7 @@ const Filter = () => {
               multiple
               onChange={handleEventChange}
             >
-              {status.map((e) => {
+              {status && status.map((e) => {
                 return (
                   <MenuItem value={e.text} key={e.id}>
                     {e.text}
@@ -154,7 +150,7 @@ const Filter = () => {
               defaultValue=""
               label="Store"
             >
-              {store.map((e) => {
+              {store && store.map((e) => {
                 return (
                   <MenuItem value={e.title} key={e.id}>
                     {e.title}
@@ -166,35 +162,36 @@ const Filter = () => {
         </Box>
         <Box sx={{ minWidth: 120 }}>
           <InputLabel>User</InputLabel>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Search User</InputLabel>
-            <Select
-              name="user"
-              onChange={formik.handleChange}
-              value={formik.values.user}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              defaultValue=""
-              label="User Name"
-            >
-              {user.map((e) => {
-                return (
-                  <MenuItem value={e.fullName} key={e.id}>
-                    {e.fullName}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          {user && 
+                    <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Search User</InputLabel>
+                    <Select
+                      name="user"
+                      onChange={formik.handleChange}
+                      value={formik.values.user}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      defaultValue=""
+                      label="User Name"
+                    >
+                      {user?.map((e) => {
+                        return (
+                          <MenuItem value={e.fullName} key={e.id}>
+                            {e.fullName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+          }
+
         </Box>
-              <startDateContext.Provider value={{startDate, setStartDate}}>
-              <endDateContext.Provider value={{endDate, setEndDate}}>
+              
               <Box paddingTop="0">
               <InputLabel>Created At</InputLabel>
-              <DateSelector />
+              <DateSelector/>
             </Box>
-              </endDateContext.Provider>
-              </startDateContext.Provider>
+              
             
           
         <Button variant="contained" type="submit" fullWidth={true}>

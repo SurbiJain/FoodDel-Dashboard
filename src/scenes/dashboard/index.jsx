@@ -1,9 +1,12 @@
 
 import React from 'react'
+import UserProfile from '../users/UserProfile';
 
 const Dashboard = () => {
   return (
-    <div>Hello World!</div>
+    <>
+    <p>Hey</p>
+    </>
   )
 }
 

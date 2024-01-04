@@ -26,7 +26,7 @@ export const Topbar = () => {
   
   
   return (
-    <Box display="flex" justifyContent="space-between" p={2} bgcolor={colors.primary[600]} > 
+    <Box display="flex" justifyContent="space-between" p={2} bgcolor={colors.primary[600]}  > 
       <Box display="flex">
       <IconButton>
           <PedalBikeIcon fontSize="large"/>

@@ -3,40 +3,45 @@ import axios from "../../hooks/axios";
 import useAxios from "./../../hooks/useAxios";
 import { DataGrid } from "@mui/x-data-grid";
 import * as moment from "moment";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Filter from "./../../global/Filter";
 import { FilterContext } from "./../../App";
-
-
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import {Link} from "react-router-dom";
 
 const columns = [
-  { field: "orderNumber", headerName: "Order Number", minWidth: 100, flex: 1 },
+  { field: "gsm", headerName: "Gsm Number", minWidth: 100, flex: 3,  },
   {
-    field: "status",
-    headerName: "Status",
-    valueGetter: (params) => params.row.status.text,
+    field: "avatar",
+    headerName: "Avatar",
+    renderCell: (params) => (
+      <img src={params.row.avatar[0].url} width="30" style={{borderRadius: 20}}/>
+    ),
+    minWidth: 100,
+    flex: 1 / 2,
+    
+  },
+  {
+    field: "firstName",
+    headerName: "First Name", 
+    minWidth: 100,
+    flex: 2,
+  },
+  {
+    field: "lastName",
+    headerName: "Last Name",
+    minWidth: 100,
+    flex: 2,
+  },
+  {
+    field: "gender",
+    headerName: "Gender",
     minWidth: 100,
     flex: 1 / 2,
   },
-  { field: "amount", headerName: "Amount", minWidth: 100, flex: 1 / 2 },
   {
-    field: "store",
-    headerName: "Store",
-    valueGetter: (params) => params.row.store.title,
-    minWidth: 100,
-    flex: 2,
-  },
-  {
-    field: "user.fullName",
-    headerName: "User",
-    valueGetter: (params) => params.row.user.fullName,
-    minWidth: 100,
-    flex: 2,
-  },
-  {
-    field: "products",
-    headerName: "Products",
-    valueGetter: (params) => params.row.products.length + " Items",
+    field: "isActive",
+    headerName: "Is Active",
     minWidth: 100,
     flex: 1 / 2,
   },
@@ -48,21 +53,40 @@ const columns = [
     minWidth: 100,
     flex: 1,
   },
+  {
+    field: "actions",
+    headerName: "Actios",
+    renderCell: (params) => (
+    <Link to={`/users/${params.row.id}`}>
+     <Button>
+      <VisibilityOutlinedIcon fontSize="Medium" sx={{color: "white"}}/>
+     </Button>
+     </Link>
+    ),
+    minWidth: 100,
+    flex: 1,
+    onclick: {onclick}
+  },
+  
 ];
 
 
-const Orders = () => {
-  let [filteredOrder, setFilteredOrder] = useState([]);
+const Users = () => {
+  let [filteredUsers, setFilteredUsers] = useState([]);
+  
+  
 
-  const [order] = useAxios({
+
+
+  const [users] = useAxios({
     axiosInstance: axios,
     method: "GET",
-    url: "/orders",
+    url: "/users",
   });
   const {filterData, setFilterData} = useContext(FilterContext);
 
   useEffect(() => {
-    setFilteredOrder(order);
+    setFilteredUsers(users);
     console.log(filterData);
 
     if (
@@ -72,7 +96,7 @@ const Orders = () => {
       filterData.status ||
       filterData.startDate
     ) {
-      const TempOrder = order.filter((entry) => {
+      const TempUsers = users.filter((entry) => {
         const createdAt = moment(entry.createdAt).format("YYYY-MM-DD");
         const startDate = moment(filterData.startDate).format("YYYY-MM-DD");
         const endDate = moment(filterData.endDate).format("YYYY-MM-DD");
@@ -97,14 +121,18 @@ const Orders = () => {
             true
         );
       });
-      setFilteredOrder(TempOrder);
+      setFilteredUsers(TempUsers);
     }
-  }, [filterData, order]);
+  }, [filterData, users]);
 
-  return (filteredOrder &&
+  const onclick = ()=>{}
+ 
+  
+
+  return (filteredUsers &&
       <>
         <Typography variant="h1" textAlign="center">
-          Orders
+          Users
         </Typography>
         <Box display="flex" sx={{ columnGap: 2, m: 2 }}>
           <Box width="30%">
@@ -113,7 +141,7 @@ const Orders = () => {
 
           <div style={{ height: "100%", width: "70%" }}>
             <DataGrid
-              rows={filteredOrder}
+              rows={filteredUsers}
               columns={columns}
               initialState={{
                 pagination: {
@@ -121,12 +149,12 @@ const Orders = () => {
                 },
               }}
               pageSizeOptions={[10, 20, 50, 100]}
+
             />
           </div>
         </Box>
       </>
-    
   );
 };
 
-export default Orders;
+export default Users;

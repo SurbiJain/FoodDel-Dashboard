@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { endDateContext, startDateContext } from "./Filter";
+import { endDateContext, startDateContext } from "./../App";
 
 
 const DateSelector = () => {
-  
   const {endDate, setEndDate} = useContext(endDateContext);
   const {startDate, setStartDate} = useContext(startDateContext);
 
