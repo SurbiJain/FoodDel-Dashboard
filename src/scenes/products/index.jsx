@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Input, List, ListItemButton, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Input,
+  List,
+  ListItemButton,
+  Button,
+} from "@mui/material";
 import useAxios from "../../hooks/useAxios";
 import axios from "../../hooks/axios";
 import PermanentDrawer from "./CreateProduct";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { editProductContext, openContext } from "./../../global/context";
+
 const Products = () => {
   const [product] = useAxios({
     axiosInstance: axios,
@@ -18,6 +27,8 @@ const Products = () => {
   const [filterCategory, setFilterCategory] = useState([]);
   const [filterProducts, setFilterProducts] = useState();
   const [inputText, setInputText] = useState();
+  const [open, setOpen] = useState(false);
+  const [editProduct, setEditProduct] = useState();
 
   const clickHandler = (e) => {
     const value = e.currentTarget.getAttribute("value");
@@ -26,7 +37,6 @@ const Products = () => {
     } else {
       setFilterCategory([...filterCategory, value]);
     }
-    
   };
 
   useEffect(() => {
@@ -36,40 +46,37 @@ const Products = () => {
         return filterCategory.includes(entry.category.title);
       });
       setFilterProducts(TempProducts);
-    } 
+    }
   }, [filterCategory, product]);
 
   let inputHandler = (e) => {
     setInputText(e.target.value);
     e.preventDefault();
   };
-  
 
-  useEffect(()=>{
+  useEffect(() => {
     if (inputText?.length > 0) {
-    console.log(inputText)
-    const tempProduct = product.filter((entry) => {
-       return entry.name === inputText
-     });
-     setFilterProducts(tempProduct)
-   } else {
-    setFilterProducts(product)
-   }},[inputText])
+      const tempProduct = product.filter((entry) => {
+        return entry.name === inputText;
+      });
+      setFilterProducts(tempProduct);
+    } else {
+      setFilterProducts(product);
+    }
+  }, [inputText]);
 
-   const [editProduct, setEditProduct] = useState()
+  const updateHandler = (item) => {
+    setOpen(true);
+    setEditProduct(item);
+  };
 
-   const updateHandler = (e)=> {
-      const value = e.currentTarget.getAttribute("value");
-     <PermanentDrawer/>
-      
-    } ;
-  
-    
-
+  const drawerHandler = () => {
+    setOpen(true);
+  };
 
   return (
     filterProducts && (
-      <Box display="flex" >
+      <Box display="flex">
         <Box width="70%">
           <Box display="flex" justifyContent="space-around" alignItems="center">
             <h1>Products</h1>
@@ -86,15 +93,28 @@ const Products = () => {
               onChange={inputHandler}
               placeholder="Product Search"
             ></Input>
-            <Box>
-              <PermanentDrawer />
-            </Box>
+            <openContext.Provider value={{ open, setOpen }}>
+              <editProductContext.Provider
+                value={{ editProduct, setEditProduct }}
+              >
+                <Box>
+                  <Button
+                    variant="contained"
+                    onClick={drawerHandler}
+                    sx={{ color: "black", bgcolor: "white" }}
+                  >
+                    Add Product
+                  </Button>
+                  <PermanentDrawer />
+                </Box>
+              </editProductContext.Provider>
+            </openContext.Provider>
           </Box>
           <Box
             display="flex"
             sx={{ flexWrap: "wrap", margin: 5, textAlign: "center" }}
           >
-            {filterProducts.map((item) => {
+            {filterProducts?.map((item) => {
               return (
                 <Box
                   sx={{
@@ -107,21 +127,24 @@ const Products = () => {
                   }}
                   key={item.id}
                 >
-                  <Box display="flex" sx={{ml: 4}}>
-                  <Box sx={{width: 300, height: 100, mb:2}}>
-                  <img
-                    src={item?.images[0]?.url}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: 70,
-                      marginTop: 25,
-                    }}
-                  />
-                  </Box>
-                  <ListItemButton value={item.id} onClick={updateHandler}>
-                  <MoreVertIcon/>
-                  </ListItemButton>
+                  <Box display="flex" sx={{ ml: 4 }}>
+                    {item.images && (
+                      <Box sx={{ width: 300, height: 100, mb: 2 }}>
+                        <img
+                          src={item.images[0]?.url}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 70,
+                            marginTop: 25,
+                          }}
+                        />
+                      </Box>
+                    )}
+
+                    <ListItemButton onClick={() => updateHandler(item)}>
+                      <MoreVertIcon />
+                    </ListItemButton>
                   </Box>
 
                   <Typography
@@ -151,7 +174,12 @@ const Products = () => {
                   >
                     {item.description}
                   </Typography>
-                  <Typography variant="h3" color="grey" sx={{ margin: 3 }} value={item.id}>
+                  <Typography
+                    variant="h3"
+                    color="grey"
+                    sx={{ margin: 3 }}
+                    value={item.id}
+                  >
                     #{item.id}
                   </Typography>
                   <Typography variant="h2" sx={{ margin: 3 }}>

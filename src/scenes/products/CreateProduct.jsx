@@ -1,9 +1,9 @@
-import { Box, Typography, Drawer } from "@mui/material";
+import { Box, Typography, Drawer, Input } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, useFormik } from "formik";
 import useAxios from "../../hooks/useAxios";
 import axios from "../../hooks/axios";
@@ -12,16 +12,16 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { editProductContext, openContext } from "./../../global/context";
+import { FileUploader } from "react-drag-drop-files";
 
 export default function PermanentDrawer() {
-  const [open, setOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [value, setValue] = useState("Enable");
-  const [imageUploadedPath, setImageUploadedPath] = useState(null);
-  // const [formValue, setFormValue] = useState();
-  
-
-  
+  const { open, setOpen } = useContext(openContext);
+  const { editProduct, setEditProduct } = useContext(editProductContext);
+  const [value, setValue] = useState("enable");
+  const [imageUploadedPath, setImageUploadedPath] = useState('');
+  const [file, setFile] = useState('');
+  const fileTypes = ["JPG", "PNG", "GIF"];
 
   const [category] = useAxios({
     axiosInstance: axios,
@@ -29,22 +29,46 @@ export default function PermanentDrawer() {
     url: "/categories",
   });
 
-  function handleImageChange(event) {
-    const file = event.target.files[0];
+  function handleImageChange(file) {
+    setFile(file);
     const formData = new FormData();
     formData.append("file", file);
-    axios.post("/media/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }).then(function (response) {
-      setImageUploadedPath(response.data.url);
-      
-    });
+    axios
+      .post("/media/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(function (response) {
+        setImageUploadedPath(response.data.url);
+      });
   }
- 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  useEffect(() => {
+    if (editProduct) {formik.setValues({
+      id: editProduct.id,
+      name: editProduct.name,
+      description: editProduct.description,
+      price: editProduct.price,
+      activeStatus: editProduct.isActive,
+      url: editProduct.images[0]?.url,
+      categories: editProduct.category?.title,
+    })} else {
+      formik.setValues({
+        id: "",
+        name: "",
+        description: "",
+        price: "",
+        activeStatus: "",
+        url: "",
+        categories: ""
+
+      })
+    }
+     
+  }, [editProduct]);
+
+  const HandleCategoryChange = (event) => {
+    
     formik.handleChange(event);
   };
   const handleValueChange = (event) => {
@@ -52,25 +76,35 @@ export default function PermanentDrawer() {
     formik.handleChange(event);
   };
 
+  const editHandler = (e) => {
+    axios
+      .patch(`/products/${e.id}`, {
+        category: { id: editProduct.id },
+        description: e.description,
+        images: [
+          {
+            name: editProduct.images[0]?.name,
+            status: editProduct.images[0]?.status,
+            type: editProduct.images[0]?.type,
+            uid: editProduct.images[0]?.uid,
+            url: editProduct.images[0]?.url,
+          },
+          { isActive: e.activeStatus },
+          { name: e.name },
+          { price: e.price },
+        ],
+      })
+      .then(function (response) {
+        console.log(response);
+      });
+  };
+  const postHandler = (e) => {
+    axios.post("/products", e)
+        .then((response)=>{console.log(response)});
+  }
+
   
-
-
-//   const editProduct = async (name, price, descrition, categories, activeStatus, url) => {
-//     const updateProduct = {
-//         name = ,
-//         price,
-//         descrition,
-//         categories,
-//         activeStatus,
-//         url
-//     }
-
-//     const response = await axios
-//         .put("/products", updateProduct)
-//         .catch((err) => {
-//             console.log('Err', err);
-//         });
-// }
+  
 
   const formik = useFormik({
     initialValues: {
@@ -79,38 +113,74 @@ export default function PermanentDrawer() {
       description: "",
       categories: "",
       activeStatus: "",
-      url: ""
+      url: "",
     },
+
     onSubmit: (values) => {
-      values = {...values, url: imageUploadedPath};
-      // editProduct(values);
+     
+      values = { ...values, url: imageUploadedPath };
+      if (editProduct && editProduct.id) {
+        editHandler(values);
+      } else {
+        postHandler(values)
+      }
+      setOpen(false)
     },
   });
 
-  
-
   const list = (
-    <Box display="flex"
-    flexDirection="column" sx={{width: 500 }} role="presentation">
-      <Formik >
-        
+    <Box
+      display="flex"
+      flexDirection="column"
+      sx={{ width: 500 }}
+      role="presentation"
+    >
+      <Formik>
         <Form onSubmit={formik.handleSubmit}>
-        <List sx={{padding:3}}>
-            <ListItem disablePadding sx={{mb: 3}}>
+          <List sx={{ padding: 3 }}>
+            <ListItem disablePadding sx={{ mb: 3 }}>
               <Typography variant="h3" textAlign="center">
                 Create Product
               </Typography>
             </ListItem>
-            <InputLabel>Add Image</InputLabel>
-            <ListItem disablePadding> 
-              <input type="file" onChange={handleImageChange} required  />
-            </ListItem>
+            <Box>
+              <InputLabel>Add Image</InputLabel>
+              <FileUploader
+                handleChange={handleImageChange}
+                name="file"
+                types={fileTypes}
+              />
+              <Box
+                sx={{
+                  border: 1,
+                  borderRadius: 1,
+                  width: "100%",
+                  display: "flex",
+                  p: 1,
+                  mt: 2,
+                }}
+              >
+                <img
+                  src={formik.values.url ? formik.values.url : imageUploadedPath}
+                  style={{ width: 50, height: 50 }}
+                />
+                <a
+                  href={formik.values.url ? formik.values.url : imageUploadedPath}
+                  variant="h12"
+                  style={{ alignSelf: "center", marginLeft: "12px" }}
+                >
+                 
+                  {editProduct ? editProduct.images[0]?.name : file?.name}
+                </a>
+              </Box>
+            </Box>
+
             <InputLabel>Product Name</InputLabel>
             <ListItem disablePadding>
               <OutlinedInput
                 name="name"
                 onChange={formik.handleChange}
-                value={formik.values.search}
+                value={formik.values.name ? formik.values.name : ''}
                 placeholder="Add Product Name"
                 fullWidth={true}
                 required
@@ -121,7 +191,7 @@ export default function PermanentDrawer() {
               <OutlinedInput
                 name="description"
                 onChange={formik.handleChange}
-                value={formik.values.search}
+                value={formik.values.description ? formik.values.description: ''}
                 placeholder="Write Product Description"
                 fullWidth={true}
                 required
@@ -132,7 +202,7 @@ export default function PermanentDrawer() {
               <OutlinedInput
                 name="price"
                 onChange={formik.handleChange}
-                value={formik.values.search}
+                value={formik.values.price ? formik.values.price : 0}
                 placeholder="Price"
                 fullWidth={true}
                 required
@@ -140,17 +210,14 @@ export default function PermanentDrawer() {
             </ListItem>
             <InputLabel id="demo-simple-select-label">Category</InputLabel>
             {category && (
-
-              
               <ListItem>
                 <FormControl fullWidth required>
-                  
                   <Select
-                    labelId="demo-simple-select-label"
+                    type="select"
                     id="demo-simple-select"
-                    value={selectedCategory}
+                    value={formik.values.categories? formik.values.categories: ''}
                     label="Category"
-                    onChange={handleCategoryChange}
+                    onChange={HandleCategoryChange}
                     name="categories"
                   >
                     {category &&
@@ -172,6 +239,7 @@ export default function PermanentDrawer() {
                 <RadioGroup
                   name="activeStatus"
                   value={value}
+                  defaultChecked="'enable'"
                   onChange={handleValueChange}
                 >
                   <FormControlLabel
@@ -195,17 +263,13 @@ export default function PermanentDrawer() {
           </List>
         </Form>
       </Formik>
-      </Box>
-    
+    </Box>
   );
 
   return (
     <div>
       <React.Fragment key={"right"}>
-        <Button variant="contained" onClick={(e) => setOpen(true)} sx={{ color: "black", bgcolor:"white" }}>
-          Add Product
-        </Button>
-        <Drawer anchor={"right"} open={open} onClose={(e) => setOpen(false)}>
+        <Drawer anchor={"right"} open={open} onClose={(e) => {setOpen(false); setEditProduct("")}}>
           {list}
         </Drawer>
       </React.Fragment>
