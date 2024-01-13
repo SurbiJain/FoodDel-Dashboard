@@ -5,7 +5,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, useFormik } from "formik";
-import useAxios from "../../hooks/useAxios";
 import axios from "../../hooks/axios";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -15,6 +14,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { editProductContext, openContext } from "./../../global/context";
 import { FileUploader } from "react-drag-drop-files";
 
+
 export default function PermanentDrawer() {
   const { open, setOpen } = useContext(openContext);
   const { editProduct, setEditProduct } = useContext(editProductContext);
@@ -22,11 +22,12 @@ export default function PermanentDrawer() {
   const [imageUploadedPath, setImageUploadedPath] = useState('');
   const [file, setFile] = useState('');
   const fileTypes = ["JPG", "PNG", "GIF"];
+  const [category, setCategory] = useState()
 
-  const [category] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/categories",
+  axios
+  .get("/categories")
+  .then(function (response) {
+    setCategory(response.data);
   });
 
   function handleImageChange(file) {

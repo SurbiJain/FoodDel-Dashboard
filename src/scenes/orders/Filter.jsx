@@ -8,11 +8,11 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
-import axios from "./../hooks/axios";
-import useAxios from "./../hooks/useAxios";
+import axios from "../../hooks/axios";
+import useAxios from "../../hooks/useAxios";
 import { useFormik } from "formik";
 import DateSelector from "./DatePicker";
-import { FilterContext, startDateContext, endDateContext } from "./../App";
+import { FilterContext, startDateContext, endDateContext } from "./index";
 
 const Filter = () => {
   const {filterData, setFilterData} = useContext(FilterContext);
@@ -64,6 +64,7 @@ const Filter = () => {
 
   const formik = useFormik({
     initialValues: {
+      search:"",
       status: [],
       store: "",
       search: "",

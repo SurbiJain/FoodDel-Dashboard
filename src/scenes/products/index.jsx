@@ -7,28 +7,33 @@ import {
   ListItemButton,
   Button,
 } from "@mui/material";
-import useAxios from "../../hooks/useAxios";
 import axios from "../../hooks/axios";
 import PermanentDrawer from "./CreateProduct";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { editProductContext, openContext } from "./../../global/context";
 
 const Products = () => {
-  const [product] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/products",
-  });
-  const [category] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/categories",
-  });
+  const [product, setProduct] = useState()
+  const [category, setCategory] = useState()
   const [filterCategory, setFilterCategory] = useState([]);
   const [filterProducts, setFilterProducts] = useState();
   const [inputText, setInputText] = useState();
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState();
+
+  axios
+  .get("/products")
+  .then(function (response) {
+    setProduct(response.data);
+  });
+  axios
+  .get("/categories")
+  .then(function (response) {
+    setCategory(response.data);
+  });
+  
+  
+  
 
   const clickHandler = (e) => {
     const value = e.currentTarget.getAttribute("value");

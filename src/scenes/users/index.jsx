@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "../../hooks/axios";
-import useAxios from "./../../hooks/useAxios";
 import { DataGrid } from "@mui/x-data-grid";
 import * as moment from "moment";
 import { Box, Button, Typography } from "@mui/material";
-import Filter from "./../../global/Filter";
-import { FilterContext } from "./../../App";
+import Filter from "./Filter";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import {Link} from "react-router-dom";
+export const UserFilterContext = createContext();
+export const UserStartDateContext = createContext();
+export const UserEndDateContext = createContext();
 
 const columns = [
   { field: "gsm", headerName: "Gsm Number", minWidth: 100, flex: 3,  },
@@ -57,9 +58,9 @@ const columns = [
     field: "actions",
     headerName: "Actios",
     renderCell: (params) => (
-    <Link to={`/users/${params.row.id}`}>
+    <Link to={`/user/${params.row.id}`}>
      <Button>
-      <VisibilityOutlinedIcon fontSize="Medium" sx={{color: "white"}}/>
+      <VisibilityOutlinedIcon fontSize="large" sx={{color: "white"}}/>
      </Button>
      </Link>
     ),
@@ -72,76 +73,71 @@ const columns = [
 
 
 const Users = () => {
-  let [filteredUsers, setFilteredUsers] = useState([]);
+  const [users, setUsers] = useState()
+  const [filterData, setFilterData] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+   let [filteredUser, setFilteredUser] = useState([]);
   
+
   
-
-
-
-  const [users] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/users",
+  axios.get("/users").then(function (response) {
+    setUsers(response.data);
   });
-  const {filterData, setFilterData} = useContext(FilterContext);
+
+  
 
   useEffect(() => {
-    setFilteredUsers(users);
-    console.log(filterData);
-
-    if (
-      filterData.search ||
-      filterData.store ||
-      filterData.user ||
-      filterData.status ||
-      filterData.startDate
+    setFilteredUser(users);
+    
+    if ((filterData) &&
+      (filterData.search ||
+      filterData.gender ||
+      filterData.activeStatus ||
+      filterData.startDate)
     ) {
       const TempUsers = users.filter((entry) => {
         const createdAt = moment(entry.createdAt).format("YYYY-MM-DD");
-        const startDate = moment(filterData.startDate).format("YYYY-MM-DD");
-        const endDate = moment(filterData.endDate).format("YYYY-MM-DD");
+        const startDate = filterData.startDate ? moment(filterData.startDate).format("YYYY-MM-DD") : null;
+        const endDate = filterData.endDate ? moment(filterData.endDate).format("YYYY-MM-DD") : null;
 
-        console.log(
-          entry.orderNumber,
-          moment(createdAt).isBetween(startDate, endDate, undefined, "[]"),
-          createdAt,
-          startDate,
-          endDate
-        );
-
+       
         return (
-          entry.store.title === filterData.search ||
-          String(entry.orderNumber) === filterData.search ||
-          entry.user.fullName === filterData.search ||
-          entry.status.text === filterData.search ||
-          entry.store.title === filterData.store ||
-          entry.user.fullName === filterData.user ||
-          filterData.status.includes(entry.status.text) ||
-          moment(createdAt).isBetween(startDate, endDate, undefined, "[]") ===
-            true
+          entry.firstName === filterData.search ||
+          String(entry.isActive) === filterData.activeStatus ||
+          String(entry.isActive) === filterData.search ||
+          entry.gender === filterData.gender ||
+          moment(createdAt).isBetween(startDate, endDate, undefined, "[]") === true
         );
       });
-      setFilteredUsers(TempUsers);
+      setFilteredUser(TempUsers);
     }
   }, [filterData, users]);
 
-  const onclick = ()=>{}
+ 
  
   
 
-  return (filteredUsers &&
+  return (filteredUser&&
+   
       <>
         <Typography variant="h1" textAlign="center">
           Users
         </Typography>
         <Box display="flex" sx={{ columnGap: 2, m: 2 }}>
+        <UserFilterContext.Provider value={{ filterData, setFilterData }}>
+            <UserStartDateContext.Provider value={{ startDate, setStartDate }}>
+              <UserEndDateContext.Provider value={{ endDate, setEndDate }}>
           <Box width="30%">
             <Filter />
           </Box>
+          </UserEndDateContext.Provider>
+            </UserStartDateContext.Provider>
+          </UserFilterContext.Provider>
 
           <div style={{ height: "100%", width: "70%" }}>
             <DataGrid
-              rows={filteredUsers}
+              rows={filteredUser}
               columns={columns}
               initialState={{
                 pagination: {
@@ -154,6 +150,7 @@ const Users = () => {
           </div>
         </Box>
       </>
+    
   );
 };
 

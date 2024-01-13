@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "../../hooks/axios";
 import useAxios from "./../../hooks/useAxios";
 import { DataGrid } from "@mui/x-data-grid";
 import * as moment from "moment";
 import { Box, Typography } from "@mui/material";
-import Filter from "./../../global/Filter";
-import { FilterContext } from "./../../App";
+import Filter from "./Filter";
 
-
-
+export const FilterContext = createContext();
+export const startDateContext = createContext();
+export const endDateContext = createContext();
 const columns = [
   { field: "orderNumber", headerName: "Order Number", minWidth: 100, flex: 1 },
   {
@@ -50,41 +50,35 @@ const columns = [
   },
 ];
 
-
 const Orders = () => {
-  let [filteredOrder, setFilteredOrder] = useState([]);
+  const [filterData, setFilterData] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
-  const [order] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/orders",
+  let [filteredOrder, setFilteredOrder] = useState([]);
+  const [order, setOrder] = useState();
+
+  axios.get("/orders").then(function (response) {
+    setOrder(response.data);
   });
-  const {filterData, setFilterData} = useContext(FilterContext);
 
   useEffect(() => {
+    
     setFilteredOrder(order);
-    console.log(filterData);
 
-    if (
-      filterData.search ||
+    if ((filterData) &&
+      (filterData.search ||
       filterData.store ||
       filterData.user ||
       filterData.status ||
-      filterData.startDate
+      filterData.startDate)
     ) {
+      const startDate = filterData.startDate ? moment(filterData.startDate).format("YYYY-MM-DD") : null;
+      const endDate = filterData.endDate ? moment(filterData.endDate).format("YYYY-MM-DD") : null;
+
+
       const TempOrder = order.filter((entry) => {
-        const createdAt = moment(entry.createdAt).format("YYYY-MM-DD");
-        const startDate = moment(filterData.startDate).format("YYYY-MM-DD");
-        const endDate = moment(filterData.endDate).format("YYYY-MM-DD");
-
-        console.log(
-          entry.orderNumber,
-          moment(createdAt).isBetween(startDate, endDate, undefined, "[]"),
-          createdAt,
-          startDate,
-          endDate
-        );
-
+        const createdAt = moment(entry.createdAt).format("YYYY-MM-DD"); 
         return (
           entry.store.title === filterData.search ||
           String(entry.orderNumber) === filterData.search ||
@@ -93,23 +87,29 @@ const Orders = () => {
           entry.store.title === filterData.store ||
           entry.user.fullName === filterData.user ||
           filterData.status.includes(entry.status.text) ||
-          moment(createdAt).isBetween(startDate, endDate, undefined, "[]") ===
-            true
+          moment(createdAt).isBetween(startDate, endDate, undefined, "[]")
         );
       });
       setFilteredOrder(TempOrder);
     }
   }, [filterData, order]);
 
-  return (filteredOrder &&
+  return (
+    filteredOrder && (
       <>
         <Typography variant="h1" textAlign="center">
           Orders
         </Typography>
         <Box display="flex" sx={{ columnGap: 2, m: 2 }}>
-          <Box width="30%">
-            <Filter />
-          </Box>
+          <FilterContext.Provider value={{ filterData, setFilterData }}>
+            <startDateContext.Provider value={{ startDate, setStartDate }}>
+              <endDateContext.Provider value={{ endDate, setEndDate }}>
+                <Box width="30%">
+                  <Filter />
+                </Box>
+              </endDateContext.Provider>
+            </startDateContext.Provider>
+          </FilterContext.Provider>
 
           <div style={{ height: "100%", width: "70%" }}>
             <DataGrid
@@ -125,7 +125,7 @@ const Orders = () => {
           </div>
         </Box>
       </>
-    
+    )
   );
 };
 
