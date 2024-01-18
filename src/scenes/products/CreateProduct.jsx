@@ -5,6 +5,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, useFormik } from "formik";
+
 import axios from "../../hooks/axios";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -66,7 +67,7 @@ export default function PermanentDrawer() {
       })
     }
      
-  }, [editProduct]);
+  }, [editProduct,]);
 
   const HandleCategoryChange = (event) => {
     

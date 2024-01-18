@@ -21,16 +21,20 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState();
 
+ useEffect(()=>{
   axios
   .get("/products")
   .then(function (response) {
     setProduct(response.data);
   });
+
   axios
   .get("/categories")
   .then(function (response) {
     setCategory(response.data);
   });
+ }, []) 
+  
   
   
   
