@@ -8,11 +8,12 @@ import {
   Button,
 } from "@mui/material";
 import axios from "../../hooks/axios";
-import PermanentDrawer from "./CreateProduct";
+import PermanentDrawer from "./../products/CreateProduct";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { editProductContext, openContext } from "./../../global/context";
+import { useParams } from "react-router-dom";
 
-const Products = () => {
+const EditProduct = () => {
   const [product, setProduct] = useState();
   const [category, setCategory] = useState();
   const [filterCategory, setFilterCategory] = useState([]);
@@ -20,16 +21,31 @@ const Products = () => {
   const [inputText, setInputText] = useState();
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState();
+  const storeId = useParams().storeId;
 
   useEffect(() => {
-    axios.get("/products").then(function (response) {
-      setProduct(response.data);
+    axios.get(`/stores/${storeId}`).then(function (response) {
+      setProduct(response.data.products);
+      
     });
 
     axios.get("/categories").then(function (response) {
       setCategory(response.data);
     });
   }, []);
+
+  const handleChange = (index, event) => {
+    let productsBody = product;
+    productsBody[index].stock = Number(event.target.value);
+
+    axios
+      .patch(
+        `/stores/${storeId}`,productsBody
+      )
+      .then(function (response) {
+        console.log(response);
+      });
+  };
 
   const clickHandler = (e) => {
     const value = e.currentTarget.getAttribute("value");
@@ -115,13 +131,13 @@ const Products = () => {
             display="flex"
             sx={{ flexWrap: "wrap", margin: 5, textAlign: "center" }}
           >
-            {filterProducts?.map((item) => {
+            {filterProducts?.map((item, index) => {
               return (
                 <Box
                   sx={{
                     margin: 2,
                     width: 1 / 4,
-                    height: 400,
+                    height: 500,
                     bgcolor: "white",
                     color: "black",
                     borderRadius: 8,
@@ -182,6 +198,19 @@ const Products = () => {
                   >
                     #{item.id}
                   </Typography>
+                  <Input
+                    type="number"
+                    variant="outlined"
+                    sx={{
+                      width: 100,
+                      border: "1px solid black",
+                      color: "black",
+                      borderRadius: 1,
+                      pl: 1,
+                    }}
+                    defaultValue={item.stock}
+                    onChange={(e)=>{handleChange( index, e)}}
+                  />
                   <Typography variant="h3" sx={{ margin: 3 }}>
                     US${item.price}
                   </Typography>
@@ -240,4 +269,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default EditProduct;

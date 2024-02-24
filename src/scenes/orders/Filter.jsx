@@ -1,4 +1,4 @@
-import React, { useContext,  useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -9,50 +9,50 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import axios from "../../hooks/axios";
-import useAxios from "../../hooks/useAxios";
 import { useFormik } from "formik";
 import DateSelector from "./DatePicker";
 import { FilterContext, startDateContext, endDateContext } from "./index";
 
 const Filter = () => {
-  const {filterData, setFilterData} = useContext(FilterContext);
-  const {startDate, setStartDate} = useContext(startDateContext);
-  const {endDate, setEndData} = useContext(endDateContext);
+  const { filterData, setFilterData } = useContext(FilterContext);
+  const { startDate, setStartDate } = useContext(startDateContext);
+  const { endDate, setEndData } = useContext(endDateContext);
   const [selectedStatus, setSelectedStatus] = useState([]);
+  const [store, setStore] = useState();
+  const [user, setUser] = useState();
+  const [status, setStatus] = useState();
+
+  useEffect(()=>{
+    let ignore = false;
+    axios
+    .get("/stores")
+    .then(function (response) {
+      if (!ignore) {
+        setStore(response.data);
+      }
+    });
+  
+    axios
+    .get("/users")
+    .then(function (response) {
+      if (!ignore) {
+        setUser(response.data);
+      }
+    });
+    axios
+    .get("/orderStatuses")
+    .then(function (response) {
+      if (!ignore) {
+        setStatus(response.data);
+      }
+    });
+   }, []) 
+  
   
 
-  let [store] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/stores",
-    requestConfig: {
-      headers: {
-        "Content-Language": "en-US",
-      },
-    },
-  });
-
-  let [user] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/users",
-    requestConfig: {
-      headers: {
-        "Content-Language": "en-US",
-      },
-    },
-  });
-
-  let [status] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: "/orderStatuses",
-    requestConfig: {
-      headers: {
-        "Content-Language": "en-US",
-      },
-    },
-  });
+  
+  
+      
 
   const handleEventChange = (event) => {
     const {
@@ -64,21 +64,16 @@ const Filter = () => {
 
   const formik = useFormik({
     initialValues: {
-      search:"",
+      search: "",
       status: [],
       store: "",
       search: "",
       user: "",
-      
     },
     onSubmit: (values) => {
-      setFilterData({...values,
-        startDate: startDate,
-        endDate: endDate
-      });
+      setFilterData({ ...values, startDate: startDate, endDate: endDate });
     },
   });
-  
 
   return (
     <>
@@ -129,13 +124,14 @@ const Filter = () => {
               multiple
               onChange={handleEventChange}
             >
-              {status && status.map((e) => {
-                return (
-                  <MenuItem value={e.text} key={e.id}>
-                    {e.text}
-                  </MenuItem>
-                );
-              })}
+              {status &&
+                status.map((e) => {
+                  return (
+                    <MenuItem value={e.text} key={e.id}>
+                      {e.text}
+                    </MenuItem>
+                  );
+                })}
             </Select>
           </FormControl>
         </Box>
@@ -152,50 +148,48 @@ const Filter = () => {
               defaultValue=""
               label="Store"
             >
-              {store && store.map((e) => {
-                return (
-                  <MenuItem value={e.title} key={e.id}>
-                    {e.title}
-                  </MenuItem>
-                );
-              })}
+              {store &&
+                store.map((e) => {
+                  return (
+                    <MenuItem value={e.title} key={e.id}>
+                      {e.title}
+                    </MenuItem>
+                  );
+                })}
             </Select>
           </FormControl>
         </Box>
         <Box sx={{ minWidth: 120 }}>
           <InputLabel>User</InputLabel>
-          {user && 
-                    <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Search User</InputLabel>
-                    <Select
-                      name="user"
-                      onChange={formik.handleChange}
-                      value={formik.values.user}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      defaultValue=""
-                      label="User Name"
-                    >
-                      {user?.map((e) => {
-                        return (
-                          <MenuItem value={e.fullName} key={e.id}>
-                            {e.fullName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-          }
-
+          {user && (
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Search User</InputLabel>
+              <Select
+                name="user"
+                onChange={formik.handleChange}
+                value={formik.values.user}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                defaultValue=""
+                label="User Name"
+              >
+                {user?.map((e) => {
+                  return (
+                    <MenuItem value={e.fullName} key={e.id}>
+                      {e.fullName}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          )}
         </Box>
-              
-              <Box paddingTop="0">
-              <InputLabel>Created At</InputLabel>
-              <DateSelector/>
-            </Box>
-              
-            
-          
+
+        <Box paddingTop="0">
+          <InputLabel>Created At</InputLabel>
+          <DateSelector />
+        </Box>
+
         <Button variant="contained" type="submit" fullWidth={true}>
           Filter
         </Button>

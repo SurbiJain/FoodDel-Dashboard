@@ -5,7 +5,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, useFormik } from "formik";
-
 import axios from "../../hooks/axios";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -15,21 +14,20 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { editProductContext, openContext } from "./../../global/context";
 import { FileUploader } from "react-drag-drop-files";
 
-
 export default function PermanentDrawer() {
   const { open, setOpen } = useContext(openContext);
   const { editProduct, setEditProduct } = useContext(editProductContext);
   const [value, setValue] = useState("enable");
-  const [imageUploadedPath, setImageUploadedPath] = useState('');
-  const [file, setFile] = useState('');
+  const [imageUploadedPath, setImageUploadedPath] = useState("");
+  const [file, setFile] = useState("");
   const fileTypes = ["JPG", "PNG", "GIF"];
-  const [category, setCategory] = useState()
+  const [category, setCategory] = useState();
 
-  axios
-  .get("/categories")
-  .then(function (response) {
-    setCategory(response.data);
-  });
+  useEffect(() => {
+    axios.get("/categories").then(function (response) {
+      setCategory(response.data);
+    });
+  }, []);
 
   function handleImageChange(file) {
     setFile(file);
@@ -46,15 +44,17 @@ export default function PermanentDrawer() {
       });
   }
   useEffect(() => {
-    if (editProduct) {formik.setValues({
-      id: editProduct.id,
-      name: editProduct.name,
-      description: editProduct.description,
-      price: editProduct.price,
-      activeStatus: editProduct.isActive,
-      url: editProduct.images[0]?.url,
-      categories: editProduct.category?.title,
-    })} else {
+    if (editProduct) {
+      formik.setValues({
+        id: editProduct.id,
+        name: editProduct.name,
+        description: editProduct.description,
+        price: editProduct.price,
+        activeStatus: editProduct.isActive,
+        url: editProduct.images[0]?.url,
+        categories: editProduct.category?.title,
+      });
+    } else {
       formik.setValues({
         id: "",
         name: "",
@@ -62,15 +62,12 @@ export default function PermanentDrawer() {
         price: "",
         activeStatus: "",
         url: "",
-        categories: ""
-
-      })
+        categories: "",
+      });
     }
-     
-  }, [editProduct,]);
+  }, [editProduct]);
 
   const HandleCategoryChange = (event) => {
-    
     formik.handleChange(event);
   };
   const handleValueChange = (event) => {
@@ -101,12 +98,10 @@ export default function PermanentDrawer() {
       });
   };
   const postHandler = (e) => {
-    axios.post("/products", e)
-        .then((response)=>{console.log(response)});
-  }
-
-  
-  
+    axios.post("/products", e).then((response) => {
+      console.log(response);
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -119,14 +114,13 @@ export default function PermanentDrawer() {
     },
 
     onSubmit: (values) => {
-     
       values = { ...values, url: imageUploadedPath };
       if (editProduct && editProduct.id) {
         editHandler(values);
       } else {
-        postHandler(values)
+        postHandler(values);
       }
-      setOpen(false)
+      setOpen(false);
     },
   });
 
@@ -163,15 +157,18 @@ export default function PermanentDrawer() {
                 }}
               >
                 <img
-                  src={formik.values.url ? formik.values.url : imageUploadedPath}
+                  src={
+                    formik.values.url ? formik.values.url : imageUploadedPath
+                  }
                   style={{ width: 50, height: 50 }}
                 />
                 <a
-                  href={formik.values.url ? formik.values.url : imageUploadedPath}
+                  href={
+                    formik.values.url ? formik.values.url : imageUploadedPath
+                  }
                   variant="h12"
                   style={{ alignSelf: "center", marginLeft: "12px" }}
                 >
-                 
                   {editProduct ? editProduct.images[0]?.name : file?.name}
                 </a>
               </Box>
@@ -182,7 +179,7 @@ export default function PermanentDrawer() {
               <OutlinedInput
                 name="name"
                 onChange={formik.handleChange}
-                value={formik.values.name ? formik.values.name : ''}
+                value={formik.values.name ? formik.values.name : ""}
                 placeholder="Add Product Name"
                 fullWidth={true}
                 required
@@ -193,7 +190,9 @@ export default function PermanentDrawer() {
               <OutlinedInput
                 name="description"
                 onChange={formik.handleChange}
-                value={formik.values.description ? formik.values.description: ''}
+                value={
+                  formik.values.description ? formik.values.description : ""
+                }
                 placeholder="Write Product Description"
                 fullWidth={true}
                 required
@@ -217,7 +216,9 @@ export default function PermanentDrawer() {
                   <Select
                     type="select"
                     id="demo-simple-select"
-                    value={formik.values.categories? formik.values.categories: ''}
+                    value={
+                      formik.values.categories ? formik.values.categories : ""
+                    }
                     label="Category"
                     onChange={HandleCategoryChange}
                     name="categories"
@@ -271,7 +272,14 @@ export default function PermanentDrawer() {
   return (
     <div>
       <React.Fragment key={"right"}>
-        <Drawer anchor={"right"} open={open} onClose={(e) => {setOpen(false); setEditProduct("")}}>
+        <Drawer
+          anchor={"right"}
+          open={open}
+          onClose={(e) => {
+            setOpen(false);
+            setEditProduct("");
+          }}
+        >
           {list}
         </Drawer>
       </React.Fragment>

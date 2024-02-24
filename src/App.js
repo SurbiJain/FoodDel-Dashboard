@@ -10,8 +10,10 @@ import React from "react";
 import Users from "./scenes/users/index";
 import UserProfile from "./scenes/users/UserProfile";
 import Products from "./scenes/products";
-// import Contacts from './scenes/contacts/index'
-// import Bar from './scenes/bar/index'
+import Stores from './scenes/stores/index'
+import CreateStore from "./scenes/stores/createStore";
+import EditProduct from "./scenes/stores/editProduct";
+import EditStore from "./scenes/stores/editStore";
 // import Form from './scenes/form'
 // import Line from './scenes/line/index'
 // import Pie from './scenes/pie/index'
@@ -38,9 +40,12 @@ function App() {
               <Route path="/users" element={<Users />}></Route>
               <Route path="/user/:userId" element={<UserProfile />}></Route>
               <Route path="/products" element={<Products />}></Route>
-              {/*  <Route path="/form" element={<Form/>}></Route>
-              <Route path="/bar" element={<Bar/>}></Route>
-              <Route path="/line" element={<Line/>}></Route>
+              <Route path="/stores" element={<Stores/>}></Route>
+              <Route path="/stores/:storeId" element={<CreateStore/>}></Route>
+              <Route path="/stores/:storeId/products" element={<EditProduct/>}></Route>
+              
+              <Route path="/stores/edit/:editId" element={<EditStore/>}></Route>
+              {/*<Route path="/line" element={<Line/>}></Route>
               <Route path="/pie" element={<Pie/>}></Route>
               <Route path="/faq" element={<FAQ/>}></Route>
               <Route path="/geography" element={<Geo/>}></Route>

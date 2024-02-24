@@ -56,7 +56,7 @@ const columns = [
   },
   {
     field: "actions",
-    headerName: "Actios",
+    headerName: "Actions",
     renderCell: (params) => (
     <Link to={`/user/${params.row.id}`}>
      <Button>
@@ -80,10 +80,10 @@ const Users = () => {
    let [filteredUser, setFilteredUser] = useState([]);
   
 
-  
-  axios.get("/users").then(function (response) {
+  useEffect(()=>{axios.get("/users").then(function (response) {
     setUsers(response.data);
-  });
+  })},[])
+  
 
   
 

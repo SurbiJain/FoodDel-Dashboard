@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import useAxios from "../../hooks/useAxios";
 import axios from "../../hooks/axios";
 import PhoneEnabledOutlinedIcon from "@mui/icons-material/PhoneEnabledOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -16,23 +15,27 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 
 const UserProfile = () => {
   const userId = useParams().userId;
+  const [user, setUser] = useState();
+  const [order, setOrder] = useState();
 
-  const [user] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: `/users/${userId}`,
-  });
-  const [order] = useAxios({
-    axiosInstance: axios,
-    method: "GET",
-    url: `/orders?_end=4&_order=desc&_sort=createdAt&_start=0&user.id=${userId}`,
-  });
 
-  useEffect(() => {
-    console.log("user", user);
-    console.log("order", order);
-  }, [user, order]);
+  useEffect(()=>{
+    axios
+    .get(`/users/${userId}`)
+    .then(function (response) {
+      setUser(response.data);
+    });
+  
+    axios
+    .get(`/orders?_end=4&_order=desc&_sort=createdAt&_start=0&user.id=${userId}`)
+    .then(function (response) {
+      setOrder(response.data);
+    });
+   }, []) 
 
+  
+
+  
   const columns = [
     {
       field: "orderNumber",

@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "../../hooks/axios";
-import useAxios from "./../../hooks/useAxios";
 import { DataGrid } from "@mui/x-data-grid";
 import * as moment from "moment";
 import { Box, Typography } from "@mui/material";
@@ -58,9 +57,21 @@ const Orders = () => {
   let [filteredOrder, setFilteredOrder] = useState([]);
   const [order, setOrder] = useState();
 
-  axios.get("/orders").then(function (response) {
-    setOrder(response.data);
-  });
+  
+  
+  useEffect(() => {
+    let ignore = false;
+    axios.get("/orders")
+      
+      .then(response => {
+        if (!ignore) {
+          setOrder(response.data);
+        }
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     
