@@ -110,7 +110,7 @@ const MySidebar = () => {
               />
               <SmallContainers
                 title="Categories"
-                to="/categores"
+                to="/categories"
                 icon={<CalendarTodayOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}

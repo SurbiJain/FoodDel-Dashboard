@@ -28,4 +28,26 @@ margin-bottom: 20px;
   
   text-wrap: wrap;
 }
+.row-style {
+  border-bottom: solid rgb(226, 223, 223) 0.5px;
+}
+tr, th, td{
+  padding: 40px;
+}
 
+.table_container{
+  width: 30%;
+  border: 1px, solid, white;
+  
+  
+}
+.store_table{
+  width: 100%; 
+  color:black;
+  background-color: white;
+  border-collapse: collapse;
+  border-radius: 7px;
+}
+.editStore{
+  margin: 80px;
+}

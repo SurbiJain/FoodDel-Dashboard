@@ -14,7 +14,7 @@ import Stores from './scenes/stores/index'
 import CreateStore from "./scenes/stores/createStore";
 import EditProduct from "./scenes/stores/editProduct";
 import EditStore from "./scenes/stores/editStore";
-// import Form from './scenes/form'
+import Categories from './scenes/categories/index'
 // import Line from './scenes/line/index'
 // import Pie from './scenes/pie/index'
 // import FAQ from './scenes/faq/index'
@@ -45,8 +45,8 @@ function App() {
               <Route path="/stores/:storeId/products" element={<EditProduct/>}></Route>
               
               <Route path="/stores/edit/:editId" element={<EditStore/>}></Route>
-              {/*<Route path="/line" element={<Line/>}></Route>
-              <Route path="/pie" element={<Pie/>}></Route>
+              <Route path="/categories" element={<Categories/>}></Route>
+              {/*<Route path="/pie" element={<Pie/>}></Route>
               <Route path="/faq" element={<FAQ/>}></Route>
               <Route path="/geography" element={<Geo/>}></Route>
               <Route path="/calender" element={<Calender/>}></Route> */}
