@@ -15,11 +15,9 @@ import CreateStore from "./scenes/stores/createStore";
 import EditProduct from "./scenes/stores/editProduct";
 import EditStore from "./scenes/stores/editStore";
 import Categories from './scenes/categories/index'
-// import Line from './scenes/line/index'
-// import Pie from './scenes/pie/index'
-// import FAQ from './scenes/faq/index'
-// import Geo from './scenes/geo/index'
-// import Calender from './scenes/calender/index'
+import Couriers from './scenes/couriers/index'
+import CourierDetails from "./scenes/couriers/CourierDetails";
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -46,10 +44,8 @@ function App() {
               
               <Route path="/stores/edit/:editId" element={<EditStore/>}></Route>
               <Route path="/categories" element={<Categories/>}></Route>
-              {/*<Route path="/pie" element={<Pie/>}></Route>
-              <Route path="/faq" element={<FAQ/>}></Route>
-              <Route path="/geography" element={<Geo/>}></Route>
-              <Route path="/calender" element={<Calender/>}></Route> */}
+              <Route path="/couriers" element={<Couriers/>}></Route>
+              <Route path="/couriers/:courierId" element={<CourierDetails/>}></Route>
             </Routes>
           </main>
         </div>

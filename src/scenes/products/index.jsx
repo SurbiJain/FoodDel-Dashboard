@@ -130,7 +130,7 @@ const Products = () => {
                 >
                   <Box display="flex" sx={{ ml: 4 }}>
                     {item.images && (
-                      <Box sx={{ width: 300, height: 80, mb: 2 }}>
+                      <Box sx={{ width: 300, height: 80, mb: 2}}>
                         <img
                           src={item.images[0]?.url}
                           style={{

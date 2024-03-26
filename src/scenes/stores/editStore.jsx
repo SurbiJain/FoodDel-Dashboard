@@ -16,11 +16,10 @@ const EditStore = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [courier, setCourier] = useState();
-  const [review, setReview] = useState()
   const [editTable, setEditTable] = useState(false);
-
   const [openSuccess, setOpenSuccess] = useState(false);
 
+  
   const handleClickSuccess = () => {
     setOpenSuccess(true);
   };
@@ -61,11 +60,6 @@ const EditStore = () => {
       setCourier(response.data);
     });
   }, []);
-  useEffect(() => {
-    axios.get(`/reviews`).then(function (response) {
-      setReview(response.data);
-    });
-  }, []);
   
   const formik = useFormik({
     initialValues: {
@@ -78,7 +72,7 @@ const EditStore = () => {
 
     onSubmit: (values) => {
       setEditTable(!editTable);
-
+     
       axios
         .patch(`/stores/${storeId}`, {
           address: { text: values.address },
@@ -308,7 +302,7 @@ const EditStore = () => {
                 </thead>
                 <tbody>
                   {courier?.map((item) => {
-                    if (item.store.title === store.title) {
+                    if (item.store?.title === store.title) {
                       return (
                         <tr className="row-style" key={item.id}>
                           <td>{item.name}</td>

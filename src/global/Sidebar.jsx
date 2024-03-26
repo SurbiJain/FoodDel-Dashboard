@@ -10,7 +10,7 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+
 
 const SmallContainers = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -119,14 +119,6 @@ const MySidebar = () => {
                 title="Couriers"
                 to="/couriers"
                 icon={<HelpOutlineOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-
-              <SmallContainers
-                title="Reviews"
-                to="/reviews"
-                icon={<BarChartOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
