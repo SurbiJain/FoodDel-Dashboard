@@ -86,12 +86,15 @@ const CourierDetails = () => {
       store: "",
       vehicle: "",
       vehicleId: "",
-      url: ""
+      url: "",
     },
 
     onSubmit: (values) => {
       setEditTable(!editTable);
-      values = { ...values, url: imageUploadedPath };
+      values = {
+        ...values,
+        url: imageUploadedPath ? imageUploadedPath : courier.avatar[0]?.url,
+      };
       console.log(values);
 
       axios
@@ -149,7 +152,6 @@ const CourierDetails = () => {
         store: courier.store?.id,
         vehicle: courier.vehicle?.id,
         url: courier.avatar[0]?.url,
-        
       });
     } else {
       formik.setValues({
@@ -160,8 +162,8 @@ const CourierDetails = () => {
         gsm: "",
         vehicleId: "",
         name: "",
-        store:"",
-        vehicle:"",
+        store: "",
+        vehicle: "",
         url: "",
       });
     }
@@ -184,12 +186,12 @@ const CourierDetails = () => {
       return e.courier.id === courierId;
     });
   }, []);
-  
+
   return (
     courier && (
       <div className="editStore">
         <div>
-          <Link to=".">
+          <Link to="./..">
             <button
               style={{
                 height: 30,
@@ -207,31 +209,29 @@ const CourierDetails = () => {
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ margin: 20 }}>
             {editTable ? (
-              <Box sx={{display: "flex", flexDirection: "row"}}>
-              <Box sx={{width: 100, mr: 2}}>
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Box sx={{ width: 100, mr: 2 }}>
+                  <img
+                    src={
+                      imageUploadedPath
+                        ? imageUploadedPath
+                        : courier.avatar[0]?.url
+                    }
+                    style={{ width: "100%", borderRadius: 50 }}
+                  />
+                </Box>
+                <FileUploader
+                  handleChange={handleImageChange}
+                  name="file"
+                  types={fileTypes}
+                />
+              </Box>
+            ) : (
+              <Box sx={{ width: 100 }}>
                 <img
-                  src={
-                    formik.values.url ? formik.values.url : imageUploadedPath
-                  }
+                  src={courier.avatar[0]?.url}
                   style={{ width: "100%", borderRadius: 50 }}
                 />
-                </Box>
-              <FileUploader
-                handleChange={handleImageChange}
-                name="file"
-                types={fileTypes}
-                
-              />
-              
-                
-              
-            </Box>
-            ) : (
-              <Box sx={{width: 100 }}>
-              <img
-                src={courier.avatar[0].url}
-                style={{ width: "100%", borderRadius: 50}}
-              />
               </Box>
             )}
           </div>
