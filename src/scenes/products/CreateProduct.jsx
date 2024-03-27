@@ -158,7 +158,7 @@ export default function PermanentDrawer() {
               >
                 <img
                   src={
-                    formik.values.url ? formik.values.url : imageUploadedPath
+                     imageUploadedPath ? imageUploadedPath : formik.values.url
                   }
                   style={{ width: 50, height: 50 }}
                 />

@@ -32,7 +32,10 @@ const Products = () => {
   }, []);
 
   const clickHandler = (e) => {
-    const value = e.currentTarget.getAttribute("value");
+    let value = e.currentTarget.getAttribute("value");
+    value = Number(value.replace(/[^0-9]/g, ""));
+    console.log(value);
+
     if (filterCategory.includes(value)) {
       setFilterCategory(filterCategory.filter((entry) => entry !== value));
     } else {
@@ -44,7 +47,7 @@ const Products = () => {
     setFilterProducts(product);
     if (filterCategory.length) {
       const TempProducts = product?.filter((entry) => {
-        return filterCategory.includes(entry.category.title);
+        return filterCategory.includes(entry.category.id);
       });
       setFilterProducts(TempProducts);
     }
@@ -130,7 +133,7 @@ const Products = () => {
                 >
                   <Box display="flex" sx={{ ml: 4 }}>
                     {item.images && (
-                      <Box sx={{ width: 300, height: 80, mb: 2}}>
+                      <Box sx={{ width: 300, height: 80, mb: 2 }}>
                         <img
                           src={item.images[0]?.url}
                           style={{
@@ -192,8 +195,11 @@ const Products = () => {
         </Box>
         <Box width="30%" sx={{ ml: 5 }}>
           <h3>Use tags to filter your Search</h3>
-          <List>
+          <List key={product.id}>
             <ListItemButton
+              onClick={() => {
+                setFilterProducts(product);
+              }}
               sx={{
                 display: "inline-block",
                 border: 1,
@@ -202,18 +208,16 @@ const Products = () => {
                 borderRadius: 3,
                 m: 1,
               }}
-              onClick={() => {
-                setFilterProducts(product);
-              }}
-              key={Math.random()}
             >
               All
             </ListItemButton>
             {category &&
               category.map((e) => {
                 return (
-                  <List
-                    key={Math.random()}
+                  <ListItemButton
+                    onClick={clickHandler}
+                    value={e.id}
+                    key={e.id}
                     sx={{
                       display: "inline-block",
                       border: 1,
@@ -223,14 +227,8 @@ const Products = () => {
                       m: 1,
                     }}
                   >
-                    <ListItemButton
-                      onClick={clickHandler}
-                      value={e.title}
-                      key={e.id}
-                    >
-                      {e.title}
-                    </ListItemButton>
-                  </List>
+                    {e.title}
+                  </ListItemButton>
                 );
               })}
           </List>

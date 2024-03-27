@@ -12,10 +12,9 @@ import { InputLabel } from "@mui/material";
 
 const CourierDetails = () => {
   const [review, setReview] = useState();
-  let result = [];
   const [courier, setCourier] = useState();
   const [editTable, setEditTable] = useState(false);
-  let courierList = [];
+  let result = [];
   const courierId = useParams().courierId;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -25,6 +24,7 @@ const CourierDetails = () => {
   const fileTypes = ["JPG", "PNG", "GIF"];
   const [store, setStore] = useState();
   const [vehicle, setVehicle] = useState();
+  let rating;
 
   const handleClickSuccess = () => {
     setOpenSuccess(true);
@@ -170,22 +170,26 @@ const CourierDetails = () => {
   }, [editTable]);
 
   useEffect(() => {
-    axios
-      .get("/reviews")
-
-      .then((response) => {
-        setReview(response.data);
+    axios.get("/reviews").then((response) => {
+      response.data.map((e) => {
+        result?.push({
+          courier: e.order.courier,
+          order: e.order,
+          rating: e.star,
+          comment: e.comment,
+        });
       });
+
+      var newResult = result.filter(function (object) {
+        return object.courier.id == courierId;
+      });
+      setReview(newResult);
+    });
   }, []);
 
   useEffect(() => {
-    review?.map((e) => {
-      courierList.push({ courier: e.order.courier, rating: e.star });
-    });
-    result = courierList.filter((e) => {
-      return e.courier.id === courierId;
-    });
-  }, []);
+    console.log("review", review);
+  }, [result]);
 
   return (
     courier && (
@@ -207,34 +211,33 @@ const CourierDetails = () => {
         </div>
         <hr style={{ borderColor: "#5c5c5c", width: "100%" }} />
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ margin: 20 }}>
-            {editTable ? (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Box sx={{ width: 100, mr: 2 }}>
-                  <img
-                    src={
-                      imageUploadedPath
-                        ? imageUploadedPath
-                        : courier.avatar[0]?.url
-                    }
-                    style={{ width: "100%", borderRadius: 50 }}
-                  />
-                </Box>
-                <FileUploader
-                  handleChange={handleImageChange}
-                  name="file"
-                  types={fileTypes}
-                />
-              </Box>
-            ) : (
-              <Box sx={{ width: 100 }}>
+          {editTable ? (
+            <Box>
+              <Box sx={{ width: 100, mr: 2 }}>
                 <img
-                  src={courier.avatar[0]?.url}
+                  src={
+                    imageUploadedPath
+                      ? imageUploadedPath
+                      : courier.avatar[0]?.url
+                  }
                   style={{ width: "100%", borderRadius: 50 }}
                 />
               </Box>
-            )}
-          </div>
+              <FileUploader
+                handleChange={handleImageChange}
+                name="file"
+                types={fileTypes}
+              />
+            </Box>
+          ) : (
+            <Box sx={{ width: 100 }}>
+              <img
+                src={courier.avatar[0]?.url}
+                style={{ width: "100%", borderRadius: 50 }}
+              />
+            </Box>
+          )}
+
           <h1>
             {courier && editTable ? (
               <input
@@ -248,182 +251,209 @@ const CourierDetails = () => {
             )}
           </h1>
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div className="table_container">
-            <table className="store_table">
-              <tbody>
-                <tr className="row-style">
-                  <th variant="head">Status</th>
-                  <td>{courier.status.text}</td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Email</th>
-                  <td>
-                    {editTable ? (
-                      <input
-                        name="email"
-                        type="text"
-                        defaultValue={courier.email}
-                        onChange={formik.handleChange}
-                      />
-                    ) : (
-                      courier.email
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Address</th>
-                  <td>
-                    {editTable ? (
-                      <input
-                        name="address"
-                        type="text"
-                        defaultValue={courier.address}
-                        onChange={formik.handleChange}
-                      />
-                    ) : (
-                      courier.address
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Phone</th>
-                  <td style={{ borderBottom: "none !important" }}>
-                    {editTable ? (
-                      <input
-                        type="text"
-                        name="gsm"
-                        defaultValue={courier.gsm}
-                        onChange={formik.handleChange}
-                      />
-                    ) : (
-                      courier.gsm
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Account No.</th>
-                  <td style={{ borderBottom: "none !important" }}>
-                    {editTable ? (
-                      <input
-                        type="text"
-                        name="accountNumber"
-                        defaultValue={courier.accountNumber}
-                        onChange={formik.handleChange}
-                      />
-                    ) : (
-                      courier.accountNumber
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Store</th>
-                  <td
-                    className="select"
-                    style={{ borderBottom: "none !important" }}
-                  >
-                    {editTable ? (
-                      <select
-                        name="store"
-                        onChange={formik.handleChange}
-                        defaultValue={"placeholder"}
-                      >
-                        <option value={"placeholder"}>
-                          {courier.store?.title}
-                        </option>
-                        {store?.map((element) => {
-                          return (
-                            <option key={element.id} value={element.id}>
-                              {element.title}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    ) : (
-                      courier.store?.title
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style">
-                  <th variant="head">Vehicle</th>
-                  <td>
-                    {editTable ? (
-                      <select
-                        name="vehicle"
-                        onChange={formik.handleChange}
-                        defaultValue={"placeholder"}
-                      >
-                        <option value={"placeholder"}>
-                          {courier.vehicle?.model}
-                        </option>
-                        {vehicle?.map((element) => {
-                          return (
-                            <option key={element.id} value={element.id}>
-                              {element.model}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    ) : (
-                      courier.vehicle?.model
-                    )}
-                  </td>
-                </tr>
-                <tr className="row-style" style={{ borderBottom: "none" }}>
-                  <th variant="head">Vehicle Id</th>
-                  <td style={{ borderBottom: "none !important" }}>
-                    {editTable ? (
-                      <input
-                        type="text"
-                        name="vehicleId"
-                        defaultValue={courier.licensePlate}
-                        onChange={formik.handleChange}
-                      />
-                    ) : (
-                      courier.licensePlate
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+        <div style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className="table_container">
+              <table className="store_table">
+                <tbody>
+                  <tr className="row-style">
+                    <th variant="head">Status</th>
+                    <td>{courier.status.text}</td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Email</th>
+                    <td>
+                      {editTable ? (
+                        <input
+                          name="email"
+                          type="text"
+                          defaultValue={courier.email}
+                          onChange={formik.handleChange}
+                        />
+                      ) : (
+                        courier.email
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Address</th>
+                    <td>
+                      {editTable ? (
+                        <input
+                          name="address"
+                          type="text"
+                          defaultValue={courier.address}
+                          onChange={formik.handleChange}
+                        />
+                      ) : (
+                        courier.address
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Phone</th>
+                    <td style={{ borderBottom: "none !important" }}>
+                      {editTable ? (
+                        <input
+                          type="text"
+                          name="gsm"
+                          defaultValue={courier.gsm}
+                          onChange={formik.handleChange}
+                        />
+                      ) : (
+                        courier.gsm
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Account No.</th>
+                    <td style={{ borderBottom: "none !important" }}>
+                      {editTable ? (
+                        <input
+                          type="text"
+                          name="accountNumber"
+                          defaultValue={courier.accountNumber}
+                          onChange={formik.handleChange}
+                        />
+                      ) : (
+                        courier.accountNumber
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Store</th>
+                    <td
+                      className="select"
+                      style={{ borderBottom: "none !important" }}
+                    >
+                      {editTable ? (
+                        <select
+                          name="store"
+                          onChange={formik.handleChange}
+                          defaultValue={"placeholder"}
+                        >
+                          <option value={"placeholder"}>
+                            {courier.store?.title}
+                          </option>
+                          {store?.map((element) => {
+                            return (
+                              <option key={element.id} value={element.id}>
+                                {element.title}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      ) : (
+                        courier.store?.title
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style">
+                    <th variant="head">Vehicle</th>
+                    <td>
+                      {editTable ? (
+                        <select
+                          name="vehicle"
+                          onChange={formik.handleChange}
+                          defaultValue={"placeholder"}
+                        >
+                          <option value={"placeholder"}>
+                            {courier.vehicle?.model}
+                          </option>
+                          {vehicle?.map((element) => {
+                            return (
+                              <option key={element.id} value={element.id}>
+                                {element.model}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      ) : (
+                        courier.vehicle?.model
+                      )}
+                    </td>
+                  </tr>
+                  <tr className="row-style" style={{ borderBottom: "none" }}>
+                    <th variant="head">Vehicle Id</th>
+                    <td style={{ borderBottom: "none !important" }}>
+                      {editTable ? (
+                        <input
+                          type="text"
+                          name="vehicleId"
+                          defaultValue={courier.licensePlate}
+                          onChange={formik.handleChange}
+                        />
+                      ) : (
+                        courier.licensePlate
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: 20,
+              }}
+            >
+              <div>
+                <button onClick={handleDelete}>Delete</button>
+                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                  <MenuItem onClick={handleClose}>Delete</MenuItem>
+                  <MenuItem onClick={handleClose}>cancel</MenuItem>
+                </Menu>
+              </div>
+              {editTable ? (
+                <button type="submit" onClick={formik.handleSubmit}>
+                  Save
+                </button>
+              ) : (
+                <button onClick={handleEdit}>Edit</button>
+              )}
+              <Snackbar
+                open={openSuccess}
+                autoHideDuration={6000}
+                onClose={handleCloseSuccess}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <Alert
+                  onClose={handleCloseSuccess}
+                  severity="success"
+                  sx={{ width: 500 }}
+                >
+                  <h1> Successfull</h1>
+                  <p>Stores editted successfully!</p>
+                </Alert>
+              </Snackbar>
+            </div>
           </div>
 
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: 20,
-            }}
+            className="table_container"
+            style={{ width: "80%", marginLeft: 20 }}
           >
-            <div>
-              <button onClick={handleDelete}>Delete</button>
-              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Delete</MenuItem>
-                <MenuItem onClick={handleClose}>cancel</MenuItem>
-              </Menu>
-            </div>
-            {editTable ? (
-              <button type="submit" onClick={formik.handleSubmit}>
-                Save
-              </button>
-            ) : (
-              <button onClick={handleEdit}>Edit</button>
-            )}
-            <Snackbar
-              open={openSuccess}
-              autoHideDuration={6000}
-              onClose={handleCloseSuccess}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              <Alert
-                onClose={handleCloseSuccess}
-                severity="success"
-                sx={{ width: 500 }}
-              >
-                <h1> Successfull</h1>
-                <p>Stores editted successfully!</p>
-              </Alert>
-            </Snackbar>
+            <table className="store_table" >
+              <thead>
+                <tr className="row-style" style={{ backgroundColor: "#fafafa" }}>
+                  <th>Reviews</th>
+                  <th>Rating</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody>
+                {review?.map((row) => (
+                  <tr className="row-style"  key={row.order.id}>
+                    <td style={{padding:10}}>{row.comment}</td>
+                    <td>{row.rating}</td>
+                    <td>{row.order.id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

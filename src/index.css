@@ -32,15 +32,27 @@ margin-bottom: 20px;
   border-bottom: solid rgb(226, 223, 223) 0.5px;
 }
 tr, th, td{
-  padding: 40px;
+  padding: 30px;
 }
 
-.table_container{
-  width: 30%;
-  border: 1px, solid, white;
-  
-  
+thead tr th {
+  padding: 20px;
+  position: relative;
 }
+
+thead tr th:before{
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0;
+  width: 1px;
+  height: 1.6em;
+  background-color: #f0f0f0;
+  transform: translateY(-50%);
+  transition: background-color 0.2s;
+  content: "";
+}
+
+
 .store_table{
   width: 100%; 
   color:black;
@@ -49,7 +61,7 @@ tr, th, td{
   border-radius: 7px;
 }
 .editStore{
-  margin: 80px;
+  margin: 30px;
 }
 .css-wnx1cx-MuiButtonBase-root-MuiButton-root{
   padding: 16px, 50px;
