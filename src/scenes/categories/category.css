@@ -1,0 +1,5 @@
+
+.imageData{
+  display: flex;
+  flex-wrap: wrap;
+}

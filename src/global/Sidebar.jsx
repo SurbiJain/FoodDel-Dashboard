@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { createContext, useEffect, useState } from "react";
+import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import { tokens } from "../Theme";
@@ -10,13 +10,15 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
+import "../index.css"
 
 
 const SmallContainers = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
-    //Menu item box
     <MenuItem
       onClick={() => {
         setSelected(title);
@@ -36,12 +38,38 @@ const MySidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const [width, setWidth] = useState(window.innerWidth);
+  
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed)
+  };
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    
+  }, []);
+
+  useEffect(()=>{
+   if(width < 1000){
+    setIsCollapsed(true)
+   } else {setIsCollapsed(false)}
+  },[width])
+
+  
 
   return (
     <Box
       sx={{
         "& .ps-sidebar-container": {
-          background: `${colors.primary[700]} !important`,
+          background: `${colors.grey[700]} !important`,
         },
         "& .MuiBox-root": {
           backgroundColor: "transparent !important",
@@ -62,67 +90,70 @@ const MySidebar = () => {
           backgroundColor: "#000 !important",
         },
         "& .ps-sidebar-root": {
-          height: 'inherit'
+          height: "inherit",
         },
       }}
     >
-      {/*  */}
-      <Box height="100%">
+      <div className="menuIcon">
+      <IconButton  onClick={toggleSidebar}>
+      <MenuIcon />
+        </IconButton>
+        </div>
+      
+      <Box height="100%" className="sidebar" >
         <Sidebar collapsed={isCollapsed}>
-          <Menu iconShape="square">
-            <Box>
-              <SmallContainers
-                title="Dashboard"
-                to="/"
-                icon={<HomeOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+          <Menu >
+            <SmallContainers
+              title="Dashboard"
+              to="/"
+              icon={<HomeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-              <SmallContainers
-                title="Orders"
-                to="/orders"
-                icon={<PeopleOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <SmallContainers
-                title="Users"
-                to="/users"
-                icon={<ContactsOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <SmallContainers
-                title="Products"
-                to="/products"
-                icon={<ReceiptOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+            <SmallContainers
+              title="Orders"
+              to="/orders"
+              icon={<PeopleOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <SmallContainers
+              title="Users"
+              to="/users"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <SmallContainers
+              title="Products"
+              to="/products"
+              icon={<ReceiptOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-              <SmallContainers
-                title="Stores"
-                to="/stores"
-                icon={<PersonOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <SmallContainers
-                title="Categories"
-                to="/categories"
-                icon={<CalendarTodayOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <SmallContainers
-                title="Couriers"
-                to="/couriers"
-                icon={<HelpOutlineOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-            </Box>
+            <SmallContainers
+              title="Stores"
+              to="/stores"
+              icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <SmallContainers
+              title="Categories"
+              to="/categories"
+              icon={<CalendarTodayOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <SmallContainers
+              title="Couriers"
+              to="/couriers"
+              icon={<HelpOutlineOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </Menu>
         </Sidebar>
       </Box>

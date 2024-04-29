@@ -5,6 +5,7 @@ import * as moment from "moment";
 import { Box, Typography } from "@mui/material";
 import Filter from "./Filter";
 
+
 export const FilterContext = createContext();
 export const startDateContext = createContext();
 export const endDateContext = createContext();
@@ -56,14 +57,26 @@ const Orders = () => {
 
   let [filteredOrder, setFilteredOrder] = useState([]);
   const [order, setOrder] = useState();
+  const [width, setWidth] = useState(window.innerWidth);
 
-  
-  
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     let ignore = false;
-    axios.get("/orders")
-      
-      .then(response => {
+    axios
+      .get("/orders")
+
+      .then((response) => {
         if (!ignore) {
           setOrder(response.data);
         }
@@ -74,22 +87,25 @@ const Orders = () => {
   }, []);
 
   useEffect(() => {
-    
     setFilteredOrder(order);
 
-    if ((filterData) &&
+    if (
+      filterData &&
       (filterData.search ||
-      filterData.store ||
-      filterData.user ||
-      filterData.status ||
-      filterData.startDate)
+        filterData.store ||
+        filterData.user ||
+        filterData.status ||
+        filterData.startDate)
     ) {
-      const startDate = filterData.startDate ? moment(filterData.startDate).format("YYYY-MM-DD") : null;
-      const endDate = filterData.endDate ? moment(filterData.endDate).format("YYYY-MM-DD") : null;
-
+      const startDate = filterData.startDate
+        ? moment(filterData.startDate).format("YYYY-MM-DD")
+        : null;
+      const endDate = filterData.endDate
+        ? moment(filterData.endDate).format("YYYY-MM-DD")
+        : null;
 
       const TempOrder = order.filter((entry) => {
-        const createdAt = moment(entry.createdAt).format("YYYY-MM-DD"); 
+        const createdAt = moment(entry.createdAt).format("YYYY-MM-DD");
         return (
           entry.store.title === filterData.search ||
           String(entry.orderNumber) === filterData.search ||
@@ -108,33 +124,40 @@ const Orders = () => {
   return (
     filteredOrder && (
       <>
-        <Typography variant="h1" textAlign="center">
-          Orders
-        </Typography>
-        <Box display="flex" sx={{ columnGap: 2, m: 2 }}>
-          <FilterContext.Provider value={{ filterData, setFilterData }}>
-            <startDateContext.Provider value={{ startDate, setStartDate }}>
-              <endDateContext.Provider value={{ endDate, setEndDate }}>
-                <Box width="30%">
-                  <Filter />
-                </Box>
-              </endDateContext.Provider>
-            </startDateContext.Provider>
-          </FilterContext.Provider>
-
-          <div style={{ height: "100%", width: "70%" }}>
-            <DataGrid
-              rows={filteredOrder}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-              pageSizeOptions={[10, 20, 50, 100]}
-            />
+        <div className="mainContainer">
+          <div className="orderTitle">
+            <Typography
+              variant={width > 1000 ? "h1" : "h3"}
+              fontWeight="bolder"
+            >
+              Orders
+            </Typography>
           </div>
-        </Box>
+          <div className="orderContainer">
+            <FilterContext.Provider value={{ filterData, setFilterData }}>
+              <startDateContext.Provider value={{ startDate, setStartDate }}>
+                <endDateContext.Provider value={{ endDate, setEndDate }}>
+                  <div className="filterContainer">
+                    <Filter />
+                  </div>
+                </endDateContext.Provider>
+              </startDateContext.Provider>
+            </FilterContext.Provider>
+
+            <div className="orderTable">
+              <DataGrid
+                rows={filteredOrder}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 10 },
+                  },
+                }}
+                pageSizeOptions={[10, 20, 50, 100]}
+              />
+            </div>
+          </div>
+        </div>
       </>
     )
   );

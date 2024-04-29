@@ -21,38 +21,39 @@ const Filter = () => {
   const [store, setStore] = useState();
   const [user, setUser] = useState();
   const [status, setStatus] = useState();
+  const [width, setWidth] = useState(window.innerWidth);
 
-  useEffect(()=>{
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     let ignore = false;
-    axios
-    .get("/stores")
-    .then(function (response) {
+    axios.get("/stores").then(function (response) {
       if (!ignore) {
         setStore(response.data);
       }
     });
-  
-    axios
-    .get("/users")
-    .then(function (response) {
+
+    axios.get("/users").then(function (response) {
       if (!ignore) {
         setUser(response.data);
       }
     });
-    axios
-    .get("/orderStatuses")
-    .then(function (response) {
+    axios.get("/orderStatuses").then(function (response) {
       if (!ignore) {
         setStatus(response.data);
       }
     });
-   }, []) 
-  
-  
-
-  
-  
-      
+  }, []);
 
   const handleEventChange = (event) => {
     const {
@@ -77,24 +78,17 @@ const Filter = () => {
 
   return (
     <>
-      <form
-        onSubmit={formik.handleSubmit}
-        display="flex"
-        flexdirection="column"
-        sx={{
-          rowGap: 2,
-          width: 1 / 3,
-          border: 1,
-          borderRadius: 1,
-          p: 2,
-          mt: 1,
-        }}
-      >
-        <Typography variant="h3" textAlign="center">
-          Filters
-        </Typography>
+      <div className="filterForm">
+        <form
+          onSubmit={formik.handleSubmit}
+          display="flex"
+          flexdirection="column"
+          
+        >
+          <Typography variant={width > 1000 ? "h3" : "h5"} textAlign="center">
+            Filters
+          </Typography>
 
-        <Box>
           <InputLabel>Search</InputLabel>
           <OutlinedInput
             name="search"
@@ -108,9 +102,7 @@ const Filter = () => {
               </InputAdornment>
             }
           />
-        </Box>
 
-        <Box sx={{ minWidth: 120 }}>
           <InputLabel>Status</InputLabel>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Order Status</InputLabel>
@@ -134,8 +126,7 @@ const Filter = () => {
                 })}
             </Select>
           </FormControl>
-        </Box>
-        <Box sx={{ minWidth: 120 }}>
+
           <InputLabel>Store</InputLabel>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Search Store</InputLabel>
@@ -158,8 +149,7 @@ const Filter = () => {
                 })}
             </Select>
           </FormControl>
-        </Box>
-        <Box sx={{ minWidth: 120 }}>
+
           <InputLabel>User</InputLabel>
           {user && (
             <FormControl fullWidth>
@@ -183,17 +173,15 @@ const Filter = () => {
               </Select>
             </FormControl>
           )}
-        </Box>
 
-        <Box paddingTop="0">
           <InputLabel>Created At</InputLabel>
           <DateSelector />
-        </Box>
 
-        <Button variant="contained" type="submit" fullWidth={true}>
-          Filter
-        </Button>
-      </form>
+          <Button variant="contained" type="submit" fullWidth={true}>
+            Filter
+          </Button>
+        </form>
+      </div>
     </>
   );
 };

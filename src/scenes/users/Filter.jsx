@@ -38,18 +38,12 @@ const Filter = () => {
 
   return (
     <>
+    <div className="filterForm">
       <form
+        
         onSubmit={formik.handleSubmit}
         display="flex"
         flexdirection="column"
-        sx={{
-          rowGap: 2,
-          width: 1 / 3,
-          border: 1,
-          borderRadius: 1,
-          p: 2,
-          mt: 1,
-        }}
       >
         <Typography variant="h3" textAlign="center">
           Filters
@@ -127,6 +121,7 @@ const Filter = () => {
           Filter
         </Button>
       </form>
+      </div>
     </>
   );
 };

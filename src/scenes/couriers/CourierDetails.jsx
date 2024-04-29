@@ -193,7 +193,7 @@ const CourierDetails = () => {
 
   return (
     courier && (
-      <div className="editStore">
+      <div className="mainContainer">
         <div>
           <Link to="./..">
             <button
@@ -210,52 +210,46 @@ const CourierDetails = () => {
           </Link>
         </div>
         <hr style={{ borderColor: "#5c5c5c", width: "100%" }} />
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          {editTable ? (
-            <Box>
-              <Box sx={{ width: 100, mr: 2 }}>
-                <img
-                  src={
-                    imageUploadedPath
-                      ? imageUploadedPath
-                      : courier.avatar[0]?.url
-                  }
-                  style={{ width: "100%", borderRadius: 50 }}
-                />
-              </Box>
-              <FileUploader
-                handleChange={handleImageChange}
-                name="file"
-                types={fileTypes}
-              />
-            </Box>
-          ) : (
-            <Box sx={{ width: 100 }}>
+
+        {editTable ? (
+          <div>
+            <div className="imageContainer">
               <img
-                src={courier.avatar[0]?.url}
-                style={{ width: "100%", borderRadius: 50 }}
+                src={
+                  imageUploadedPath ? imageUploadedPath : courier.avatar[0]?.url
+                }
+                className="storeImage" 
               />
-            </Box>
+            </div>
+            <FileUploader
+              handleChange={handleImageChange}
+              name="file"
+              types={fileTypes}
+            />
+          </div>
+        ) : (
+          <div className="imageContainer">
+            <img className="storeImage" src={courier.avatar[0]?.url} />
+          </div>
+        )}
+
+        <h1>
+          {courier && editTable ? (
+            <input
+              name="name"
+              type="text"
+              defaultValue={courier.name}
+              onChange={formik.handleChange}
+            />
+          ) : (
+            courier.name
           )}
+        </h1>
 
-          <h1>
-            {courier && editTable ? (
-              <input
-                name="name"
-                type="text"
-                defaultValue={courier.name}
-                onChange={formik.handleChange}
-              />
-            ) : (
-              courier.name
-            )}
-          </h1>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div className="table_container">
-              <table className="store_table">
+        <div className="courierContainer">
+          <div className="column">
+            <div className="courierTable">
+              <table className="courier_table">
                 <tbody>
                   <tr className="row-style">
                     <th variant="head">Status</th>
@@ -393,67 +387,63 @@ const CourierDetails = () => {
               </table>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                margin: 20,
-              }}
-            >
-              <div>
-                <button onClick={handleDelete}>Delete</button>
-                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                  <MenuItem onClick={handleClose}>Delete</MenuItem>
-                  <MenuItem onClick={handleClose}>cancel</MenuItem>
-                </Menu>
-              </div>
+            <div className="btn">
+              <button className="cancel" onClick={handleDelete}>Delete</button>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>Delete</MenuItem>
+                <MenuItem onClick={handleClose}>cancel</MenuItem>
+              </Menu>
+
               {editTable ? (
-                <button type="submit" onClick={formik.handleSubmit}>
+                <button type="submit" className="save" onClick={formik.handleSubmit}>
                   Save
                 </button>
               ) : (
-                <button onClick={handleEdit}>Edit</button>
+                <button className="save" onClick={handleEdit}>Edit</button>
               )}
-              <Snackbar
-                open={openSuccess}
-                autoHideDuration={6000}
-                onClose={handleCloseSuccess}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <Alert
-                  onClose={handleCloseSuccess}
-                  severity="success"
-                  sx={{ width: 500 }}
-                >
-                  <h1> Successfull</h1>
-                  <p>Stores editted successfully!</p>
-                </Alert>
-              </Snackbar>
             </div>
-          </div>
+            <Snackbar
+              open={openSuccess}
+              autoHideDuration={6000}
+              onClose={handleCloseSuccess}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <Alert
+                onClose={handleCloseSuccess}
+                severity="success"
+                sx={{ width: 500 }}
+              >
+                <h1> Successfull</h1>
+                <p>Stores editted successfully!</p>
+              </Alert>
+            </Snackbar>
 
-          <div
-            className="table_container"
-            style={{ width: "80%", marginLeft: 20 }}
-          >
-            <table className="store_table" >
-              <thead>
-                <tr className="row-style" style={{ backgroundColor: "#fafafa" }}>
-                  <th>Reviews</th>
-                  <th>Rating</th>
-                  <th>Order</th>
-                </tr>
-              </thead>
-              <tbody>
-                {review?.map((row) => (
-                  <tr className="row-style"  key={row.order.id}>
-                    <td style={{padding:10}}>{row.comment}</td>
-                    <td>{row.rating}</td>
-                    <td>{row.order.id}</td>
+            <div
+              className="courierTable"
+              style={{ width: "80%", marginLeft: 20 }}
+            >
+              <table className="courier_table">
+                <thead>
+                  <tr
+                    className="row-style"
+                    style={{ backgroundColor: "#fafafa" }}
+                  >
+                    <th>Reviews</th>
+                    <th>Rating</th>
+                    <th>Order</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {review?.map((row) => (
+                    <tr className="row-style" key={row.order.id}>
+                      <td style={{ padding: 10 }}>{row.comment}</td>
+                      <td>{row.rating}</td>
+                      <td>{row.order.id}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

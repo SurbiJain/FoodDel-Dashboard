@@ -1,0 +1,10 @@
+.userBox{
+  width: 30%;
+  border: 1px solid white !important;
+}
+
+@media (max-width: 1000px){
+  .userBox{
+    width: 100%;
+  }
+}

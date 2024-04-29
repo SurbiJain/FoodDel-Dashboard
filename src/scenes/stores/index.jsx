@@ -1,41 +1,52 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "../../hooks/axios";
 import { DataGrid } from "@mui/x-data-grid";
-import * as moment from "moment";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import {Link} from "react-router-dom";
-
+import {  Button, Typography } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { Link } from "react-router-dom";
+import "./index.css";
 
 const Stores = () => {
   const [store, setStore] = useState();
-  
+  const [width, setWidth] = useState(window.innerWidth);
   
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const columns = [
-    { field: "id", headerName: "Store ID", minWidth: 100, flex: 1 / 2 },
+    { field: "id", headerName: "Store ID", minWidth: 100, flex: 1/3 },
     {
       field: "title",
       headerName: "Title",
       valueGetter: (params) => params.row.title,
-      minWidth: 100,
-      flex: 1,
+      minWidth: 150,
+      flex: 1/2,
     },
-    { field: "email", headerName: "Email Address", minWidth: 100, flex: 2 },
+    { field: "email", headerName: "Email Address", minWidth: 200, flex: 1 },
     {
       field: "gsm",
       headerName: "Phone Number",
-      minWidth: 100,
-      flex: 1,
+      minWidth: 150,
+      flex: 1/2,
     },
     {
       field: "address.text",
       headerName: "Address",
       valueGetter: (params) => params.row.address.text,
-      minWidth: 100,
-      flex: 2,
+      minWidth: 300,
+      flex: 1,
     },
 
     {
@@ -44,43 +55,38 @@ const Stores = () => {
       renderCell: (params) => {
         return (
           <div
+            className="tableStatus"
             style={{
-              border: 1,
-              borderRadius: 10,
-              width: 70,
-              height: 30,
               backgroundColor: params.row.isActive === true ? "green" : "gray",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
             }}
           >
-           {params.row.isActive === true ? "Open"   : "Closed"} 
-           {params.row.isActive === true ? <CheckIcon/>   : <ClearIcon/>} 
-            
-            
+            {params.row.isActive === true ? "Open" : "Closed"}
+            {params.row.isActive === true ? <CheckIcon /> : <ClearIcon />}
           </div>
         );
       },
       minWidth: 100,
-      flex: 1,
+      flex: 1/2,
     },
     {
       field: "actions",
       headerName: "Actions",
       renderCell: (params) => (
-      <Link to={`/stores/edit/${params.row.id}`}>
-       <Button>
-        <VisibilityOutlinedIcon fontSize="large" sx={{color: "white"}}/>
-       </Button>
-       </Link>
+        <Link to={`/stores/edit/${params.row.id}`}>
+          <div className="tableActions">
+            <Button>
+              <VisibilityOutlinedIcon
+                fontSize="small"
+                sx={{ color: "white" }}
+              />
+            </Button>
+          </div>
+        </Link>
       ),
       minWidth: 100,
-      flex: 1,
-      onclick: {onclick}
+      flex: 1/2,
+      onclick: { onclick },
     },
-   
-    
   ];
 
   useEffect(() => {
@@ -92,11 +98,23 @@ const Stores = () => {
   return (
     store && (
       <>
-        <Typography variant="h1" textAlign="center">
-          Stores
-        </Typography>
-        <Box display="flex" sx={{ columnGap: 2, m: 2 }}>
-          <div style={{ height: "100%", width: "100%" }}>
+        <div className="mainContainer">
+          <div className="header">
+            <div>
+              <Typography
+                variant={width > 1000 ? "h1" : "h3"}
+                fontWeight="bolder"
+              >
+                Stores
+              </Typography>
+            </div>
+            <div>
+              <Link to="/stores/new">
+              <Button variant="contained" >Add New Store</Button>
+              </Link>
+            </div>
+          </div>
+          <div className="storeTable">
             <DataGrid
               rows={store}
               columns={columns}
@@ -108,7 +126,7 @@ const Stores = () => {
               pageSizeOptions={[10, 20, 50, 100]}
             />
           </div>
-        </Box>
+        </div>
       </>
     )
   );

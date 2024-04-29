@@ -128,7 +128,7 @@ export default function PermanentDrawer() {
     <Box
       display="flex"
       flexDirection="column"
-      sx={{ width: 500 }}
+      className="Drawer"
       role="presentation"
     >
       <Formik>
@@ -139,40 +139,34 @@ export default function PermanentDrawer() {
                 Create Product
               </Typography>
             </ListItem>
-            <Box>
+            
               <InputLabel>Add Image</InputLabel>
               <FileUploader
                 handleChange={handleImageChange}
                 name="file"
                 types={fileTypes}
+                
               />
-              <Box
-                sx={{
-                  border: 1,
-                  borderRadius: 1,
-                  width: "100%",
-                  display: "flex",
-                  p: 1,
-                  mt: 2,
-                }}
-              >
-                <img
+              
+              {imageUploadedPath && 
+              <div>
+              <img
                   src={
-                     imageUploadedPath ? imageUploadedPath : formik.values.url
+                     imageUploadedPath
                   }
-                  style={{ width: 50, height: 50 }}
+                  style={{marginTop:10, width: 50, height: 50 }}
                 />
                 <a
                   href={
                     formik.values.url ? formik.values.url : imageUploadedPath
                   }
                   variant="h12"
-                  style={{ alignSelf: "center", marginLeft: "12px" }}
+                  style={{ alignSelf: "center", marginLeft: "12px", color:"blue" }}
                 >
                   {editProduct ? editProduct.images[0]?.name : file?.name}
                 </a>
-              </Box>
-            </Box>
+                </div>}
+             
 
             <InputLabel>Product Name</InputLabel>
             <ListItem disablePadding>

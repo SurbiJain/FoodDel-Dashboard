@@ -27,7 +27,7 @@ const CreateStore = () => {
           }}
         >
           <Box display="flex" sx={{ marginTop: 1 }}>
-            <h3>Title</h3>
+            <Typography variant="h3">Title</Typography>
             <Typography variant="h10">{store?.title}</Typography>
           </Box>
           <Box display="flex" sx={{ marginTop: 1 }}>

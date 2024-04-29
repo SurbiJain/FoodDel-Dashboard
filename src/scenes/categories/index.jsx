@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../hooks/axios";
-import Button from '@mui/material/Button';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import Button from "@mui/material/Button";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { useTheme } from "@mui/material";
+import { tokens } from "../../Theme";
+import "./category.css";
 
 const Categories = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [categories, setCategories] = useState();
   const [products, setProducts] = useState();
 
@@ -19,51 +24,57 @@ const Categories = () => {
   }, []);
 
   return (
-    <div style={{margin: "auto",
-      width: "50%"}}>
-     <h1>Categories</h1>
-      <table border={5} >
-      
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Product</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories?.map((e) => {
-            return (
-              <tr key={e.id}>
-                <td>{e.title}</td>
-                <td>
-                  {products?.map((product) => {
-                    if (product?.category.id === e.id) {
-                      return (
-                        <img
-                          src={product.images[0]?.url}
-                          style={{
-                            width: 30,
-                            height: 30,
-                            margin: 5,
-                            borderRadius: 5,
-                          }}
-                          key={product.id}
-                        />
-                      );
-                    }
-                  })}
-                </td>
-                <td>{e.isActive === true ? <Button variant="outlined" color="success">
-                <VisibilityOutlinedIcon sx={{margin: 0.5, fontSize:"small"}}/> Visible
-</Button> : <Button variant="outlined" color="error">
-Not Visible
-</Button>}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="mainContainer">
+      <h1>Categories</h1>
+      <div className="categoriesContainer categoriesTable">
+        <table className="categories_table" border={1}>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Product</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories?.map((e) => {
+              return (
+                <tr key={e.id}>
+                  <td>{e.title}</td>
+                  <td>
+                    <div className="imageData">
+                      {products?.map((product) => {
+                        if (product?.category.id === e.id) {
+                          return (
+                            <div className="imageContainer">
+                              <img
+                                className="productImage"
+                                src={product.images[0]?.url}
+                                key={product.id}
+                              />
+                            </div>
+                          );
+                        }
+                      })}
+                    </div>
+                  </td>
+                  <td>
+                    {e.isActive === true ? (
+                      <Button variant="outlined" color="success">
+                        <VisibilityOutlinedIcon sx={{ fontSize: "small" }} />{" "}
+                        Visible
+                      </Button>
+                    ) : (
+                      <Button variant="outlined" color="error">
+                        Not Visible
+                      </Button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,72 @@
+.order{
+  margin: 10vh;
+}
+
+.BarChart {
+  display: "flex";
+  flex-direction: "row";
+  color: "black";
+}
+
+.Bar {
+  height: 170;
+  background-color: "white";
+  border-radius: 5;
+}
+
+.chartContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: black;
+}
+.graph {
+  margin: 10px;
+  width: 33%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.timeline {
+  width: 50%;
+ 
+}
+.productDetails {
+  display: flex;
+  flex-direction: row;
+  column-gap: 3vw;
+  margin-top: 30px;
+}
+.trendingProducts, .recentOrders{
+  width: 30vw;
+  height: auto;
+}
+
+
+@media (max-width: 1000px) {
+  
+  .chartContainer {
+    flex-direction: column;
+  }
+  
+  
+  .timeline {
+   
+    margin: 0px;
+    margin-bottom: 30px;
+   
+  }
+  .productDetails {
+    row-gap: 30px;
+    flex-direction: column;
+  }
+  
+
+  .graph{
+    width: 100%;
+  }
+  .recentOrders, .trendingProducts, .timeline {
+    width: 100%;
+  }
+}

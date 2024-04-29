@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import map from "./images/map.png";
+import { Typography } from "@mui/material";
 
 const EditStore = () => {
   const [store, setStore] = useState();
@@ -19,7 +20,6 @@ const EditStore = () => {
   const [editTable, setEditTable] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  
   const handleClickSuccess = () => {
     setOpenSuccess(true);
   };
@@ -60,7 +60,7 @@ const EditStore = () => {
       setCourier(response.data);
     });
   }, []);
-  
+
   const formik = useFormik({
     initialValues: {
       status: "",
@@ -72,7 +72,7 @@ const EditStore = () => {
 
     onSubmit: (values) => {
       setEditTable(!editTable);
-     
+
       axios
         .patch(`/stores/${storeId}`, {
           address: { text: values.address },
@@ -115,183 +115,162 @@ const EditStore = () => {
 
   return (
     store && (
-      <div className="editStore">
-        <div>
-          <Link to="./../..">
-            <button
-              style={{
-                height: 30,
-                width: 100,
-                marginBottom: 20,
-                border: 1,
-                borderRadius: 5,
-              }}
-            >
-              Stores
-            </button>
-          </Link>
-        </div>
+      <div className="mainContainer">
+        <Link to="./../..">
+          <button className="button">Stores</button>
+        </Link>
+
         <hr style={{ borderColor: "#5c5c5c", width: "100%" }} />
-        <h1>
-          {store && editTable ? (
-            <input
-              name="title"
-              type="text"
-              defaultValue={store.title}
-              onChange={formik.handleChange}
-            />
-          ) : (
-            store.title
-          )}
-        </h1>
+        <div className="storeTitle">
+          <Typography variant="h3" fontWeight="bolder">
+            {store && editTable ? (
+              <input
+                className="input"
+                name="title"
+                type="text"
+                defaultValue={store.title}
+                onChange={formik.handleChange}
+              />
+            ) : (
+              store.title
+            )}
+          </Typography>
+        </div>
 
-        <div
-          style={{
-            display: "flex",
-            width:"100%"
-          }}
-        >
-          <div
-            style={{ display: "flex", flexDirection: "column"}}
-          >
-            <div className="table_container">
-              <table className="store_table">
-                <tbody>
-                  <tr className="row-style">
-                    <td variant="head">Status</td>
-                    <td>
-                      {editTable ? (
-                        <>
-                          <label>
-                            <input
-                              type="radio"
-                              name="status"
-                              value="Open"
-                              defaultChecked={store.isActive === true}
-                              onChange={formik.handleChange}
-                            />
-                            Open
-                          </label>
-                          <label>
-                            <input
-                              type="radio"
-                              name="status"
-                              value="Closed"
-                              defaultChecked={store.isActive === false}
-                              onChange={formik.handleChange}
-                            />
-                            Closed
-                          </label>
-                        </>
-                      ) : store.isActive === true ? (
-                        "Open"
-                      ) : (
-                        "Closed"
-                      )}
-                    </td>
-                  </tr>
-                  <tr className="row-style">
-                    <td variant="head">Email</td>
+        <div className="storeContainer">
+          <div className="column storeTable">
+            <table className="store_table ">
+              <tbody>
+                <tr className="row-style">
+                  <th variant="head">Status</th>
+                  <td>
+                    {editTable ? (
+                      <>
+                        <label>
+                          <input
+                            type="radio"
+                            name="status"
+                            value="Open"
+                            defaultChecked={store.isActive === true}
+                            onChange={formik.handleChange}
+                          />
+                          Open
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="status"
+                            value="Closed"
+                            defaultChecked={store.isActive === false}
+                            onChange={formik.handleChange}
+                          />
+                          Closed
+                        </label>
+                      </>
+                    ) : store.isActive === true ? (
+                      "Open"
+                    ) : (
+                      "Closed"
+                    )}
+                  </td>
+                </tr>
+                <tr className="row-style">
+                  <th variant="head">Email</th>
 
-                    <td>
-                      {editTable ? (
-                        <input
-                          name="email"
-                          type="text"
-                          defaultValue={store.email}
-                          onChange={formik.handleChange}
-                        />
-                      ) : (
-                        store.email
-                      )}
-                    </td>
-                  </tr>
-                  <tr className="row-style">
-                    <th variant="head">Address</th>
-                    <td>
-                      {editTable ? (
-                        <input
-                          name="address"
-                          type="text"
-                          defaultValue={store.address.text}
-                          onChange={formik.handleChange}
-                        />
-                      ) : (
-                        store.address.text
-                      )}
-                    </td>
-                  </tr>
-                  <tr className="row-style" style={{ borderBottom: "none" }}>
-                    <td variant="head">Phone</td>
-                    <td style={{ borderBottom: "none !important" }}>
-                      {editTable ? (
-                        <input
-                          type="text"
-                          name="gsm"
-                          defaultValue={store.gsm}
-                          onChange={formik.handleChange}
-                        />
-                      ) : (
-                        store.gsm
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                  <td>
+                    {editTable ? (
+                      <input
+                        className="input"
+                        name="email"
+                        type="text"
+                        defaultValue={store.email}
+                        onChange={formik.handleChange}
+                      />
+                    ) : (
+                      store.email
+                    )}
+                  </td>
+                </tr>
+                <tr className="row-style">
+                  <th variant="head">Address</th>
+                  <td>
+                    {editTable ? (
+                      <input
+                        className="input"
+                        name="address"
+                        type="text"
+                        defaultValue={store.address.text}
+                        onChange={formik.handleChange}
+                      />
+                    ) : (
+                      store.address.text
+                    )}
+                  </td>
+                </tr>
+                <tr className="row-style" style={{ borderBottom: "none" }}>
+                  <th variant="head">Phone</th>
+                  <td style={{ borderBottom: "none !important" }}>
+                    {editTable ? (
+                      <input
+                        className="input"
+                        type="text"
+                        name="gsm"
+                        defaultValue={store.gsm}
+                        onChange={formik.handleChange}
+                      />
+                    ) : (
+                      store.gsm
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                margin: 20,
-              }}
-            >
-              <div>
-                <button onClick={handleDelete}>Delete</button>
-                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                  <MenuItem onClick={handleClose}>Delete</MenuItem>
-                  <MenuItem onClick={handleClose}>cancel</MenuItem>
-                </Menu>
-              </div>
+            <div className="btn">
+              <button className="cancel" onClick={handleDelete}>
+                Delete
+              </button>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>Delete</MenuItem>
+                <MenuItem onClick={handleClose}>cancel</MenuItem>
+              </Menu>
+
               {editTable ? (
-                <button type="submit" onClick={formik.handleSubmit}>
+                <button
+                  className="save"
+                  type="submit"
+                  onClick={formik.handleSubmit}
+                >
                   Save
                 </button>
               ) : (
-                <button onClick={handleEdit}>Edit</button>
+                <button className="save" onClick={handleEdit}>
+                  Edit
+                </button>
               )}
-              <Snackbar
-                open={openSuccess}
-                autoHideDuration={6000}
-                onClose={handleCloseSuccess}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <Alert
-                  onClose={handleCloseSuccess}
-                  severity="success"
-                  sx={{ width: 500 }}
-                >
-                  <h1> Successfull</h1>
-                  <p>Stores editted successfully!</p>
-                </Alert>
-              </Snackbar>
             </div>
           </div>
+          <Snackbar
+            open={openSuccess}
+            autoHideDuration={6000}
+            onClose={handleCloseSuccess}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Alert
+              onClose={handleCloseSuccess}
+              severity="success"
+              sx={{ width: 500 }}
+            >
+              <h1> Successfull</h1>
+              <p>Stores editted successfully!</p>
+            </Alert>
+          </Snackbar>
 
-          <div style={{marginLeft:20}}>
-            <div style={{ display: "flex", flexDirection: "column",  }}>
-              <img
-                src={map}
-                style={{
-                  width: "100%",
-                  height: "50%",
-                  borderRadius: 5,
-                  marginLeft: 5,
-                }}
-              />
+          <div className="column">
+            <div className="map">
+              <img className="mapImage" src={map} />
             </div>
-            <div style={{marginTop:30}}>
+            <div className="storeTable">
               <table className="store_table">
                 <thead>
                   <tr className="row-style">

@@ -11,23 +11,30 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from '@mui/material/InputAdornment';
+import { sidebarContext } from "../App";
+import "../index.css"
 
+
+ 
 
 export const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-   
+ 
     const [language, setLanguage] = useState('');
   
     const handleChange = (e) => {
       setLanguage(e.target.value);
     }
+    
   
   
   return (
-    <Box display="flex" justifyContent="space-between" p={2} bgcolor={colors.primary[600]}  > 
+    <Box display="flex" justifyContent="space-between" p={2} bgcolor={colors.grey[900]}  > 
       <Box display="flex">
+      
+
       <IconButton>
           <PedalBikeIcon fontSize="large"/>
         </IconButton>
@@ -35,7 +42,7 @@ export const Topbar = () => {
           Speed Delivery
         </Typography>
       </Box>
-      <Box display="flex" sx={{  width: 500, border: 1, borderRadius: 2}} bgcolor={colors.primary[400]}>
+      <Box display="flex" sx={{  width: 500, border: 1, borderRadius: 2}} bgcolor={colors.grey[900]}>
       <InputBase  placeholder="Search by Store ID, E-mail, Keyword" fullWidth={true} sx={{pl: 2}}
       endAdornment={
         <InputAdornment position="start">
@@ -52,27 +59,11 @@ export const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <InputLabel id="demo-select-small-label">Language</InputLabel>
-      <Select
-        labelId="demo-select-small-label"
-        id="demo-select-small"
-        label="Language"
-        onChange={handleChange}
-        value={language}
-      >
-        <MenuItem value={language}>
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value="English" >English</MenuItem>
-        <MenuItem value="Hindi">Hindi</MenuItem>
-        <MenuItem value="German">German</MenuItem>
-      </Select>
-    </FormControl>
+        <div className="loginAvatar">
     <Typography variant="h5" sx={{m:"10px"}}>
           Surbhi Jain
         </Typography>
-
+        </div>
       </Box>
 
       
