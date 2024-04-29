@@ -2,6 +2,10 @@
   width: 30%;
   border: 1px solid white !important;
 }
+.userContainer2{
+display: flex;
+flex-direction: column;
+}
 
 @media (max-width: 1000px){
   .userBox{

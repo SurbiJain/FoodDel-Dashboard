@@ -90,6 +90,18 @@ const UserProfile = () => {
     user && (
       <>
         <div className="mainContainer">
+        <Box sx={{ display: "flex", gap: 1 }}>
+                <SpeedOutlinedIcon />
+                <Typography variant="h10">/</Typography>
+                <GroupAddOutlinedIcon />
+                <Link
+                  to={`/users`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <Typography variant="h10"> Users /</Typography>
+                </Link>
+                <Typography variant="h10">Show</Typography>
+              </Box>
           <div className="userContainer">
             <div className="userBox">
               <Box sx={{ marginTop: 3, textAlign: "center" }}>
@@ -117,18 +129,8 @@ const UserProfile = () => {
               </Box>
             </div>
             
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <SpeedOutlinedIcon />
-                <Typography variant="h10">/</Typography>
-                <GroupAddOutlinedIcon />
-                <Link
-                  to={`/users`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <Typography variant="h10"> Users /</Typography>
-                </Link>
-                <Typography variant="h10">Show</Typography>
-              </Box>
+              
+            <div className="userContainer2">
               <Box sx={{ marginTop: 3 }}>
                 <Typography variant="h3">Orders</Typography>
               </Box>
@@ -152,6 +154,7 @@ const UserProfile = () => {
                   <Typography variant="h5">No Order to Show</Typography>
                 </Box>
               )}
+              
               <Box sx={{ marginTop: 3 }}>
                 <Typography variant="h3">Addresses</Typography>
               </Box>
@@ -171,7 +174,7 @@ const UserProfile = () => {
                   />
                 </div>
               )}
-            
+            </div>
           </div>
         </div>
       </>

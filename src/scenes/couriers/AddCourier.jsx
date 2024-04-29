@@ -9,8 +9,7 @@ import ListItem from "@mui/material/ListItem";
 import DialogTitle from "@mui/material/DialogTitle";
 import { OutlinedInput } from "@mui/material";
 import axios from "./../../hooks/axios";
-
-
+import { orange } from "@mui/material/colors";
 
 const AddCourier = () => {
   const [step, setStep] = useState(1);
@@ -79,13 +78,11 @@ const AddCourier = () => {
 
   return (
     <>
-     <div >
-        <button className="createCourier"  onClick={handleOpen}>
-          Add Courier
-        </button>
-        </div>
+      <button className="save" onClick={handleOpen} style={{ height: "50px" }}>
+        Add Courier
+      </button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle >Add New Courier</DialogTitle>
+        <DialogTitle>Add New Courier</DialogTitle>
 
         {step === 1 && (
           <DialogContent>

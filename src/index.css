@@ -5,20 +5,7 @@ body,
   height: 100%;
   width: 100%;
 }
-.mainContainer {
-  margin: 20px;
-}
 
-.content {
-  flex: 1 1 auto;
-  overflow-y: auto;
-}
-
-.app {
-  display: flex;
-  position: relative;
-  height: fit-content;
-}
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -34,6 +21,39 @@ body,
 .css-1gens70-MuiDataGrid-root .MuiDataGrid-cellContent {
   text-wrap: wrap;
 }
+.app {
+  display: flex;
+  position: relative;
+  height: fit-content;
+}
+.content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.mainContainer {
+  margin: 20px;
+}
+
+.cancel,
+.save,
+.button {
+  color: rgba(255, 255, 255, 0.85);
+  width: 100px;
+  height: 30px;
+  margin-top: 20px;
+  border: 1px solid #424242;
+  background-color: #141414;
+  padding: 7px 11px;
+  font-size: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+.save {
+  background-color: rgb(250, 74, 5);
+  
+}
+
 
 tr,
 th,
@@ -60,7 +80,9 @@ td {
 .store_table, .courier_table {
   color: black;
   background-color: white;
+  width: 100%;
 }
+
 .column {
   display: flex;
   flex-direction: column;
@@ -85,6 +107,7 @@ td {
   display: flex;
   column-gap: 20px;
   margin-top: 20px;
+  
 }
 .filterContainer {
   width: 50%;
@@ -94,10 +117,16 @@ td {
 .orderTable,
 .storeTable,
 .categoriesTable, .courierTable {
-  width: 50%;
+  width: 100%;
   overflow-y: auto;
 }
 
+
+
+
+.menuIcon {
+  display: none;
+}
 @media (max-width: 1000px) {
   .filterContainer {
     width: 100%;
@@ -129,12 +158,6 @@ td {
    {
     width: 100%;
   }
-}
-
-.menuIcon {
-  display: none;
-}
-@media (max-width: 1000px) {
   .mainContainer {
     margin: 10px;
    
@@ -163,7 +186,7 @@ td {
   margin: 10px;
   
 }
-.productImage{
+.productImage, .storeImage{
   width: 100%;
   height: 100%;
   border-radius: 5px;

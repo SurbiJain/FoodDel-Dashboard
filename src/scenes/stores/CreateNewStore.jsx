@@ -37,7 +37,7 @@ const CreateNewStore = () => {
           onChange={formik.handleChange}
         />
         <div className="storeContainer">
-          <div className="storeTable">
+          <div className="storeTable" style={{maxWidth: '380px'}}>
             <table className="store_table">
               <tbody>
                 <tr className="row-style">
@@ -100,6 +100,7 @@ const CreateNewStore = () => {
                   </td>
                 </tr>
               </tbody>
+              
             </table>
             <div className="btn btn2">
               <button

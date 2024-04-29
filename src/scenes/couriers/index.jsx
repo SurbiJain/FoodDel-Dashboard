@@ -111,6 +111,7 @@ const Couriers = () => {
       field: "status",
       headerName: "Status",
       renderCell: (params) => {
+        
         if (params.row.status.text === "Available") {
           return (
             <Button variant="contained" color="success">
@@ -138,11 +139,15 @@ const Couriers = () => {
     {
       field: "actions",
       headerName: "Actions",
+      
       renderCell: (params) => (
         <Link to={`/couriers/${params.row.id}`}>
+          <div className="tableActions">
+
           <Button>
             <VisibilityOutlinedIcon fontSize="small" sx={{ color: "white" }} />
           </Button>
+          </div>
         </Link>
       ),
       minWidth: 100,
