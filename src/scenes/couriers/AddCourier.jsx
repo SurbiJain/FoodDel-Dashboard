@@ -81,7 +81,7 @@ const AddCourier = () => {
       <button className="save" onClick={handleOpen} style={{ height: "50px" }}>
         Add Courier
       </button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Add New Courier</DialogTitle>
 
         {step === 1 && (

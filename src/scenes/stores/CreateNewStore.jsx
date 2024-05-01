@@ -37,7 +37,7 @@ const CreateNewStore = () => {
           onChange={formik.handleChange}
         />
         <div className="storeContainer">
-          <div className="storeTable" style={{maxWidth: '380px'}}>
+          <div>
             <table className="store_table">
               <tbody>
                 <tr className="row-style">
@@ -50,6 +50,7 @@ const CreateNewStore = () => {
                           name="status"
                           value="Open"
                           onChange={formik.handleChange}
+
                         />
                         Open
                       </label>
@@ -74,6 +75,7 @@ const CreateNewStore = () => {
                       name="email"
                       type="text"
                       onChange={formik.handleChange}
+                      placeholder="Email"
                     />
                   </td>
                 </tr>
@@ -85,6 +87,7 @@ const CreateNewStore = () => {
                       name="address"
                       type="text"
                       onChange={formik.handleChange}
+                      placeholder="Address"
                     />
                   </td>
                 </tr>
@@ -96,6 +99,7 @@ const CreateNewStore = () => {
                       type="text"
                       name="gsm"
                       onChange={formik.handleChange}
+                      placeholder="Phone Number"
                     />
                   </td>
                 </tr>

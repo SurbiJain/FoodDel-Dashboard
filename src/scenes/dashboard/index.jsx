@@ -128,12 +128,12 @@ const Dashboard = () => {
   return (
     <>
       <div className="mainContainer">
-        <Box sx={{ mb: 5 }}>
+        <Box>
           <BarChart />
         </Box>
 
         <div>
-          <div className="timeline">
+          <div className="timeline" style={{margin: "auto"}}>
             {order && (
               <DataGrid
                 rows={order}
@@ -148,7 +148,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <div className="productDetails">
+        <div className="productDetails" >
           <div className="recentOrders">
             {order && (
               <DataGrid

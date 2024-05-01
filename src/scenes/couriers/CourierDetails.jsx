@@ -426,7 +426,7 @@ const CourierDetails = () => {
                 <thead>
                   <tr
                     className="row-style"
-                    style={{ backgroundColor: "#fafafa" }}
+                    
                   >
                     <th>Reviews</th>
                     <th>Rating</th>

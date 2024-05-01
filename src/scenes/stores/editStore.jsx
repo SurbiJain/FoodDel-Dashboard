@@ -270,10 +270,10 @@ const EditStore = () => {
             <div className="map">
               <img className="mapImage" src={map} />
             </div>
-            <div className="storeTable">
+            
               <table className="store_table">
                 <thead>
-                  <tr className="row-style">
+                  <tr>
                     <th variant="head">Couriers</th>
                     <th variant="head">Vehicle ID</th>
                     <th variant="head">Email</th>
@@ -283,7 +283,7 @@ const EditStore = () => {
                   {courier?.map((item) => {
                     if (item.store?.title === store.title) {
                       return (
-                        <tr className="row-style" key={item.id}>
+                        <tr key={item.id}>
                           <td>{item.name}</td>
                           <td>{item.licensePlate}</td>
                           <td>{item.email} </td>
@@ -293,7 +293,7 @@ const EditStore = () => {
                   })}
                 </tbody>
               </table>
-            </div>
+            
           </div>
         </div>
       </div>
