@@ -1,5 +1,5 @@
 import { ColorModeContext, useMode } from "./Theme";
-import { CssBaseline, ThemeProvider, Button } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import Topbar from "./global/Topbar";
 import MySidebar from "./global/Sidebar";
@@ -17,55 +17,146 @@ import EditStore from "./scenes/stores/editStore";
 import Categories from "./scenes/categories/index";
 import Couriers from "./scenes/couriers/index";
 import CourierDetails from "./scenes/couriers/CourierDetails";
-import "./index.css"
+import Login from "./scenes/logIn/LogIn";
+import "./index.css";
 import CreateNewStore from "./scenes/stores/CreateNewStore";
-export const sidebarContext = createContext()
+
+import { AuthProvider } from "./scenes/logIn/useAuth";
+import { ProtectedRoute } from "./scenes/logIn/ProtectedRoute";
+import { Sidebar } from "react-pro-sidebar";
+export const sidebarContext = createContext();
+export const logInContext = createContext();
 
 function App() {
   const [theme, colorMode] = useMode();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  
-
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-       
-        <Topbar />
-       
-        <CssBaseline />
-        <div className="app">
-          <MySidebar/>
+    <AuthProvider>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <ProtectedRoute>
+            <Topbar />
+          </ProtectedRoute>
 
-          <main className="content">
-            <Routes>
-              <Route path="/" element={<Dashboard />}></Route>
-              <Route path="/orders" element={<Orders />}></Route>
-              <Route path="/users" element={<Users />}></Route>
-              <Route path="/user/:userId" element={<UserProfile />}></Route>
-              <Route path="/products" element={<Products />}></Route>
-              <Route path="/stores" element={<Stores />}></Route>
-              <Route path="/stores/:storeId" element={<CreateStore />}></Route>
-              <Route path="/stores/new" element={<CreateNewStore />}></Route>
-              <Route
-                path="/stores/:storeId/products"
-                element={<EditProduct />}
-              ></Route>
-              <Route
-                path="/stores/edit/:editId"
-                element={<EditStore />}
-              ></Route>
-              <Route path="/categories" element={<Categories />}></Route>
-              <Route path="/couriers" element={<Couriers />}></Route>
-              <Route
-                path="/couriers/:courierId"
-                element={<CourierDetails />}
-              ></Route>
-            </Routes>
-          </main>
-        </div>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+          <CssBaseline />
+          <div className="app">
+            <ProtectedRoute>
+              <MySidebar />
+            </ProtectedRoute>
+
+            <main className="content">
+              <Routes>
+                <Route path="/LogIn" element={<Login />}></Route>
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoute>
+                      <Orders />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/users"
+                  element={
+                    <ProtectedRoute>
+                      <Users />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/user/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <UserProfile />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/products"
+                  element={
+                    <ProtectedRoute>
+                      <Products />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/stores"
+                  element={
+                    <ProtectedRoute>
+                      <Stores />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/stores/:storeId"
+                  element={
+                    <ProtectedRoute>
+                      <CreateStore />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/stores/new"
+                  element={
+                    <ProtectedRoute>
+                      <CreateNewStore />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/stores/:storeId/products"
+                  element={
+                    <ProtectedRoute>
+                      <EditProduct />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/stores/edit/:editId"
+                  element={
+                    <ProtectedRoute>
+                      <EditStore />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/categories"
+                  element={
+                    <ProtectedRoute>
+                      <Categories />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/couriers"
+                  element={
+                    <ProtectedRoute>
+                      <Couriers />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/couriers/:courierId"
+                  element={
+                    <ProtectedRoute>
+                      <CourierDetails />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+              </Routes>
+            </main>
+          </div>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    </AuthProvider>
   );
 }
 

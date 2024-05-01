@@ -1,17 +1,13 @@
 import { useContext, useState } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { ColorModeContext, tokens } from "../Theme";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import PedalBikeIcon from '@mui/icons-material/PedalBike';
 import InputBase from "@mui/material/InputBase";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from '@mui/material/InputAdornment';
-import { sidebarContext } from "../App";
+import { useAuth } from "../scenes/logIn/useAuth";
 import "../index.css"
 
 
@@ -21,14 +17,18 @@ export const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
- 
+  const { logout } = useAuth();
+  
+  
     const [language, setLanguage] = useState('');
   
     const handleChange = (e) => {
       setLanguage(e.target.value);
     }
     
-  
+    const handleLogout = () => {
+      logout();
+    };
   
   return (
     <Box display="flex" justifyContent="space-between" p={2} bgcolor={colors.grey[900]}  > 
@@ -59,11 +59,13 @@ export const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <div className="loginAvatar">
-    <Typography variant="h5" sx={{m:"10px"}}>
-          Surbhi Jain
-        </Typography>
-        </div>
+       
+          
+        <button  className="logout" onClick={handleLogout}>
+          Log Out
+          </button>
+        
+        
       </Box>
 
       

@@ -45,7 +45,7 @@ const Categories = () => {
                       {products?.map((product) => {
                         if (product?.category.id === e.id) {
                           return (
-                            <div className="imageContainer">
+                            <div className="imageContainer" key={Math.random()}>
                               <img
                                 className="productImage"
                                 src={product.images[0]?.url}

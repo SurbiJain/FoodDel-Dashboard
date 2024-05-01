@@ -11,6 +11,8 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Navigate, Outlet } from "react-router-dom";
+
 import "../index.css"
 
 
@@ -39,6 +41,7 @@ const MySidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [width, setWidth] = useState(window.innerWidth);
+  
   
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed)
@@ -105,7 +108,7 @@ const MySidebar = () => {
           <Menu >
             <SmallContainers
               title="Dashboard"
-              to="/"
+              to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
