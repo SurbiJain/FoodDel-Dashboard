@@ -30,6 +30,14 @@ body,
   flex: 1 1 auto;
   overflow-y: auto;
 }
+.bg{
+  background-image: url(./scenes/logIn/images/foodBg.jpeg);
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  position: relative;
+
+}
 
 .mainContainer {
   margin: 20px;
