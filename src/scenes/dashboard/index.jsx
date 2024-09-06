@@ -10,7 +10,6 @@ const columns = [
   {
     field: "status",
     headerName: "Status",
-
     renderHeader: () => <strong>Timeline</strong>,
     valueGetter: (params) => params.row.status.text,
     minWidth: 100,

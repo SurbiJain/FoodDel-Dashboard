@@ -25,7 +25,7 @@ const Categories = () => {
 
   return (
     <div className="mainContainer">
-      <h1>Categories</h1>
+      <h1 className="category-head">Categories</h1>
       <div className="categoriesContainer categoriesTable">
         <table className="categories_table" border={1}>
           <thead>

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
@@ -11,8 +11,6 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Navigate, Outlet } from "react-router-dom";
-
 import "../index.css"
 
 

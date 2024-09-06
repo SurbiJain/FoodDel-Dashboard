@@ -57,7 +57,7 @@ const Filter = () => {
 
   const handleEventChange = (event) => {
     const {
-      target: { value },
+      target: { value }
     } = event;
     setSelectedStatus(typeof value === "string" ? value.split(",") : value);
     formik.handleChange(event);
